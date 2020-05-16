@@ -30,7 +30,7 @@ public class User {
     private String roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Contact> contacts = new ArrayList<>();
+    private List<Contact> contacts;
 
     public User(){
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ContactInterface {
 
-    ArrayList<Contact> getAllContacts();
+    ArrayList<Contact> getAllContactsForUser(int idUser);
 
     Contact getContactById(int idContact);
 
