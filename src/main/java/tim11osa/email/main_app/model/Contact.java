@@ -31,6 +31,9 @@ public class Contact {
     @Column(name = "note", unique = false, nullable = false)
     private String note;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
 
     public Contact(String firstName, String lastName, String displayName, String email, String photoPath, String note) {
         this.firstName = firstName;
@@ -112,5 +115,13 @@ public class Contact {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

@@ -1,6 +1,9 @@
 package tim11osa.email.main_app.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -25,6 +28,9 @@ public class User {
 
     @Column(name = "roles", unique = false, nullable = false)
     private String roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Contact> contacts = new ArrayList<>();
 
     public User(){
 
@@ -103,5 +109,13 @@ public class User {
 
     public void setRoles(String roles) {
         this.roles = roles;
+    }
+
+    public List<Contact> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(List<Contact> contacts) {
+        this.contacts = contacts;
     }
 }
