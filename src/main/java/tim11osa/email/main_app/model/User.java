@@ -54,6 +54,11 @@ public class User {
         contact.setUser(this);
     }
 
+    public void remove(Contact contact){
+        contact.setUser(null);
+        getContacts().remove(contact);
+    }
+
 /*    public User(String firstName, String lastName, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;

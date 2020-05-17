@@ -14,7 +14,7 @@ public interface ContactInterface {
 
     Integer addContact(Contact newContact, Integer userId);
 
-    void removeContact(int idContact);
+    void removeContact(Integer idUser, Integer idContact);
 
     void updateContact(Contact contact, Integer idUser);
 

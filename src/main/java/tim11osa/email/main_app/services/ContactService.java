@@ -2,6 +2,7 @@ package tim11osa.email.main_app.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import tim11osa.email.main_app.crud_interfaces.ContactInterface;
 import tim11osa.email.main_app.model.Contact;
 import tim11osa.email.main_app.model.User;
@@ -53,8 +54,15 @@ public class ContactService implements ContactInterface {
     }
 
     @Override
-    public void removeContact(int idContact) {
-        contactRepository.deleteById(idContact);
+    public void removeContact(Integer userId, Integer contactIdToBeDeleted) {
+
+        User u = userRepository.findById(userId).get();
+
+        Contact c = contactRepository.getOne(contactIdToBeDeleted);
+
+        u.remove(c);
+
+        contactRepository.deleteById(c.getId());
     }
 
     @Override
