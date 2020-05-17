@@ -1,5 +1,7 @@
 package tim11osa.email.main_app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -31,7 +33,9 @@ public class Contact {
     @Column(name = "note", unique = false, nullable = false)
     private String note;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
+    @JsonIgnore
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
 
@@ -47,6 +51,8 @@ public class Contact {
     public Contact(){
 
     }
+
+
 
     @Override
     public String toString() {
