@@ -14,9 +14,7 @@ import java.util.*;
 @RequestMapping("/")
 public class ContactController {
 
-<<<<<<< HEAD
-    //commit za divergent
-=======
+
     @Autowired
     ContactService contactService;
 
@@ -57,5 +55,4 @@ public class ContactController {
         contactService.removeContact(userId, contactId);
     }
 
->>>>>>> security_branach
 }
