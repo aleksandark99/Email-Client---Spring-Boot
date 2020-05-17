@@ -31,4 +31,5 @@ build/
 .vscode/
 
 *.properties
-src/main/resources/data.sql
+src/main/resources
+/data.sql
