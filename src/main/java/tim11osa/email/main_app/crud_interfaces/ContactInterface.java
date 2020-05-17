@@ -16,7 +16,7 @@ public interface ContactInterface {
 
     void removeContact(int idContact);
 
-    void updateContact(Contact contact);
+    void updateContact(Contact contact, Integer idUser);
 
 
 }

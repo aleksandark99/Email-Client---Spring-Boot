@@ -24,7 +24,7 @@ public class Contact {
     @Column(name = "displayName", unique = false, nullable = false)
     private String displayName;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", unique = false, nullable = false)
     private String email;
 
     @Column(name = "photoPath", unique = false, nullable = false)

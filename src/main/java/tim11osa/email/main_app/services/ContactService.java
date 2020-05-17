@@ -58,8 +58,12 @@ public class ContactService implements ContactInterface {
     }
 
     @Override
-    public void updateContact(Contact contact) {
-        contactRepository.save(contact);
+    public void updateContact(Contact contactToBeUpdated, Integer idUser) {
+
+        User u = userRepository.findById(idUser).get();
+
+        contactToBeUpdated.setUser(u);
+        contactRepository.save(contactToBeUpdated);
 
     }
 }

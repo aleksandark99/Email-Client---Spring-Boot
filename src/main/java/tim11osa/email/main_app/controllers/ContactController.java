@@ -43,9 +43,9 @@ public class ContactController {
 
 
 
-    @PutMapping("/contacts")
-    public void updateContact(@RequestBody Contact contact){
-        contactService.updateContact(contact);
+    @PutMapping("/contacts/{idUser}")
+    public void updateContact(@RequestBody Contact contact,@PathVariable("idUser")Integer idUser){
+        contactService.updateContact(contact,idUser);
     }
 
     @DeleteMapping("/contact/{id}")
