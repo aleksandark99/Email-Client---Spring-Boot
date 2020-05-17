@@ -2,13 +2,17 @@ package tim11osa.email.main_app.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import tim11osa.email.main_app.crud_interfaces.ContactInterface;
 import tim11osa.email.main_app.model.Contact;
+import tim11osa.email.main_app.model.User;
 import tim11osa.email.main_app.repository.ContactRepository;
+import tim11osa.email.main_app.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ContactService implements ContactInterface {
@@ -16,10 +20,16 @@ public class ContactService implements ContactInterface {
     @Autowired
     ContactRepository contactRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
 
     @Override
-    public ArrayList<Contact> getAllContacts() {
-        return (ArrayList<Contact>) contactRepository.findAll();
+    public Set<Contact> getAllContactsForUser(int idUser) {
+       Optional<User> u = userRepository.findById(idUser);
+       //(ArrayList<Contact>) contactRepository.findByUser(u.get());
+        return contactRepository.findByUser(u.get());
+        //return contactRepository.findByUser(idUser);
     }
 
     @Override
@@ -28,21 +38,40 @@ public class ContactService implements ContactInterface {
     }
 
     @Override
-    public Integer addContact(Contact newContact) {
-        contactRepository.save(newContact);
+    public Integer addContact(Contact newContact, Integer userId) {
+
+        User u = userRepository.findById(userId).get();
+
+        newContact.setUser(u);
+        Contact newC = contactRepository.save(newContact);
+
+        //u.add(newC);
+
+
         Optional<Contact> c = contactRepository.findTopByOrderById();
         return c.isPresent() ? c.get().getId() : 0;
 
     }
 
     @Override
-    public void removeContact(int idContact) {
-        contactRepository.deleteById(idContact);
+    public void removeContact(Integer userId, Integer contactIdToBeDeleted) {
+
+        User u = userRepository.findById(userId).get();
+
+        Contact c = contactRepository.getOne(contactIdToBeDeleted);
+
+        u.remove(c);
+
+        contactRepository.deleteById(c.getId());
     }
 
     @Override
-    public void updateContact(Contact contact) {
-        contactRepository.save(contact);
+    public void updateContact(Contact contactToBeUpdated, Integer idUser) {
+
+        User u = userRepository.findById(idUser).get();
+
+        contactToBeUpdated.setUser(u);
+        contactRepository.save(contactToBeUpdated);
 
     }
 }

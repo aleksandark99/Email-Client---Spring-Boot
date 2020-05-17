@@ -2,6 +2,7 @@ package tim11osa.email.main_app.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -23,14 +24,14 @@ public class User {
     @Column(name = "user_name", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password", unique = true, nullable = false)
+    @Column(name = "pass_word", unique = true, nullable = false)
     private String password;
 
     @Column(name = "roles", unique = false, nullable = false)
     private String roles;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Contact> contacts = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Contact> contacts = new HashSet<Contact>();
 
     public User(){
 
@@ -43,6 +44,19 @@ public class User {
         this.username = username;
         this.password = password;
         this.roles = roles;
+    }
+
+    public void add(Contact contact){
+        if (contact.getUser() != null){
+            contact.getUser().getContacts().remove(contact);
+        }
+        getContacts().add(contact);
+        contact.setUser(this);
+    }
+
+    public void remove(Contact contact){
+        contact.setUser(null);
+        getContacts().remove(contact);
     }
 
 /*    public User(String firstName, String lastName, String username, String password) {
@@ -111,11 +125,11 @@ public class User {
         this.roles = roles;
     }
 
-    public List<Contact> getContacts() {
+    public Set<Contact> getContacts() {
         return contacts;
     }
 
-    public void setContacts(List<Contact> contacts) {
+    public void setContacts(Set<Contact> contacts) {
         this.contacts = contacts;
     }
 }

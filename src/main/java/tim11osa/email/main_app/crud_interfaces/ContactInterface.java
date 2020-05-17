@@ -4,18 +4,19 @@ import tim11osa.email.main_app.model.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public interface ContactInterface {
 
-    ArrayList<Contact> getAllContacts();
+    Set<Contact> getAllContactsForUser(int idUser);
 
     Contact getContactById(int idContact);
 
-    Integer addContact(Contact newContact);
+    Integer addContact(Contact newContact, Integer userId);
 
-    void removeContact(int idContact);
+    void removeContact(Integer idUser, Integer idContact);
 
-    void updateContact(Contact contact);
+    void updateContact(Contact contact, Integer idUser);
 
 
 }
