@@ -3,6 +3,7 @@ package tim11osa.email.main_app.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.UserInterface;
+import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
 import tim11osa.email.main_app.model.User;
 import tim11osa.email.main_app.repository.UserRepository;
 
@@ -29,8 +30,7 @@ public class UserService implements UserInterface {
     public boolean addUser(User newUser) {
         boolean exist = userRepository.findByUsernameOrPassword(newUser.getUsername(), newUser.getPassword()).isPresent();
         if (exist) return false;
-        userRepository.save(newUser);
-        return true;
+        return userRepository.save(newUser) instanceof  User ? true : false;
     }
 
     @Override
@@ -39,7 +39,19 @@ public class UserService implements UserInterface {
     }
 
     @Override
-    public void updateUser(User user) {
+    public User updateUser(User user) {
+
+        if(!userRepository.existsById(user.getId())){
+            throw new ResourceNotFoundException("UserId: " + user.getId() + " not found");
+        }
+
+        return userRepository.findById(user.getId()). map(u -> {
+            u.setFirstName(user.getFirstName());
+            u.setLastName(user.getLastName());
+            u.setUsername(user.getUsername());
+            u.setPassword(user.getPassword());
+            return userRepository.save(u);
+        }).orElseThrow(() -> new ResourceNotFoundException("UserId: " + user.getId() + " not found"));
 
     }
 

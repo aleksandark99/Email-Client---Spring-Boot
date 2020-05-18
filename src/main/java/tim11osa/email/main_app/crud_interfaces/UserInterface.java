@@ -15,7 +15,7 @@ public interface UserInterface {
 
     void removeUser(int idUser);
 
-    void updateUser(User user);
+    User updateUser(User user);
 
     boolean exists(User potentiallyNewUser);
 

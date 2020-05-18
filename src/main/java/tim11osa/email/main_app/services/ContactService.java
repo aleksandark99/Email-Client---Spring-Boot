@@ -1,9 +1,11 @@
 package tim11osa.email.main_app.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import tim11osa.email.main_app.crud_interfaces.ContactInterface;
+import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
 import tim11osa.email.main_app.model.Contact;
 import tim11osa.email.main_app.model.User;
 import tim11osa.email.main_app.repository.ContactRepository;
@@ -26,36 +28,51 @@ public class ContactService implements ContactInterface {
 
     @Override
     public Set<Contact> getAllContactsForUser(int idUser) {
-       Optional<User> u = userRepository.findById(idUser);
-       //(ArrayList<Contact>) contactRepository.findByUser(u.get());
-        return contactRepository.findByUser(u.get());
-        //return contactRepository.findByUser(idUser);
+
+        return contactRepository.findByUser_Id(idUser);
+
     }
 
     @Override
     public Contact getContactById(int idContact) {
+
         return contactRepository.getOne(idContact);
     }
 
     @Override
-    public Integer addContact(Contact newContact, Integer userId) {
+    public Contact addContact(Contact newContact, Integer userId) {
 
-        User u = userRepository.findById(userId).get();
+        User u = null;
+
+        if (!userRepository.existsById(userId)){
+            throw new ResourceNotFoundException("UserId " + userId + " not found!");
+        }
+
+        u = userRepository.findById(userId).get();
 
         newContact.setUser(u);
         Contact newC = contactRepository.save(newContact);
 
-        //u.add(newC);
+        u.add(newC);
 
-
-        Optional<Contact> c = contactRepository.findTopByOrderById();
-        return c.isPresent() ? c.get().getId() : 0;
+        return newC;
 
     }
 
-    @Override
-    public void removeContact(Integer userId, Integer contactIdToBeDeleted) {
+    /* @DeleteMapping("/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable (value = "postId") Long postId, @PathVariable (value = "commentId") Long commentId) {
+        return commentRepository.findByIdAndPostId(commentId, postId).map(comment -> {
+            commentRepository.delete(comment);
+            return ResponseEntity.ok().build();
+        }).orElseThrow(() -> new ResourceNotFoundException("Comment not found with id " + commentId + " and postId " + postId));
+    }*/
 
+    @Override
+    public ResponseEntity<?> removeContact(Integer userId, Integer contactIdToBeDeleted) {
+
+
+
+/*
         User u = userRepository.findById(userId).get();
 
         Contact c = contactRepository.getOne(contactIdToBeDeleted);
@@ -63,15 +80,41 @@ public class ContactService implements ContactInterface {
         u.remove(c);
 
         contactRepository.deleteById(c.getId());
+*/
+
+        return contactRepository.findByIdAndUser_Id(contactIdToBeDeleted, userId).map(contact -> {
+            contactRepository.delete(contact);
+            return ResponseEntity.ok().build();
+        }).orElseThrow(() -> new ResourceNotFoundException("Contact not found with id " + contactIdToBeDeleted + " and userId " + userId + "!"));
     }
 
-    @Override
-    public void updateContact(Contact contactToBeUpdated, Integer idUser) {
 
-        User u = userRepository.findById(idUser).get();
+
+
+    @Override
+    public Contact updateContact(Contact contactToBeUpdated, Integer idUser) {
+
+        final User u;
+
+        if (!userRepository.existsById(idUser)){
+            throw new ResourceNotFoundException("UserId " + idUser + " not found!");
+        }
+        u = userRepository.findById(idUser).get();
+
+        return contactRepository.findById(contactToBeUpdated.getId()).map(contact -> {
+            contact.setFirstName(contactToBeUpdated.getFirstName());
+            contact.setLastName(contactToBeUpdated.getLastName());
+            contact.setDisplayName(contactToBeUpdated.getDisplayName());
+            contact.setEmail(contactToBeUpdated.getEmail());
+            contact.setPhotoPath(contactToBeUpdated.getPhotoPath());
+            contact.setNote(contactToBeUpdated.getNote());
+            contact.setUser(u);
+            return contactRepository.save(contact);
+        }).orElseThrow(() -> new ResourceNotFoundException("ContactId " + contactToBeUpdated.getId() + "not found"));
+/*        User u = userRepository.findById(idUser).get();
 
         contactToBeUpdated.setUser(u);
-        contactRepository.save(contactToBeUpdated);
+        contactRepository.save(contactToBeUpdated);*/
 
     }
 }

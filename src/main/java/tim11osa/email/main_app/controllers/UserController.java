@@ -41,9 +41,16 @@ public class UserController {
     private LoggedUserDetailsService loggedUserDetailService;
 
 
+
+    @PutMapping("/users")
+    public User updateUser(@RequestBody User user) {
+        return userService.updateUser(user);
+    }
+
+
+
     @PostMapping("/register")
     public boolean registerNewUser(@RequestBody User potentiallyNewUser){
-
 
         return userService.addUser(potentiallyNewUser);
     }

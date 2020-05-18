@@ -23,4 +23,7 @@ public interface ContactRepository extends JpaRepository<Contact, Integer> {
     @Query("select c from Contact c where c.user.id = :userid")
     Set<Contact> findByUser(@Param("userid") int userid);
     Set<Contact> findByUser(User user);
+    Set<Contact> findByUser_Id(Integer id);
+
+    Optional<Contact> findByIdAndUser_Id(Integer contactIdToBeDeleted, Integer userId);
 }

@@ -1,5 +1,6 @@
 package tim11osa.email.main_app.crud_interfaces;
 
+import org.springframework.http.ResponseEntity;
 import tim11osa.email.main_app.model.Contact;
 
 import java.util.ArrayList;
@@ -12,11 +13,11 @@ public interface ContactInterface {
 
     Contact getContactById(int idContact);
 
-    Integer addContact(Contact newContact, Integer userId);
+    Contact addContact(Contact newContact, Integer userId);
 
-    void removeContact(Integer idUser, Integer idContact);
+    ResponseEntity<?> removeContact(Integer idUser, Integer idContact);
 
-    void updateContact(Contact contact, Integer idUser);
+    Contact updateContact(Contact contact, Integer idUser);
 
 
 }

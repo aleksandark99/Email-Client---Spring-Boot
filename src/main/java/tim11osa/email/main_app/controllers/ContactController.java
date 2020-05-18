@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tim11osa.email.main_app.model.Contact;
+import tim11osa.email.main_app.repository.ContactRepository;
 import tim11osa.email.main_app.services.ContactService;
 
 import java.util.*;
@@ -20,22 +21,21 @@ public class ContactController {
 
 
 
-    @PostMapping("/contacts/{user_id}")
-    public Integer addContact(@RequestBody Contact newContact, @PathVariable("user_id")Integer userId) {
+    @PostMapping("/contacts/{idUser}")
+    public Contact addNewContact(@RequestBody Contact newContact, @PathVariable("idUser")Integer userId) {
 
         return contactService.addContact(newContact, userId);
     }
 
-    @GetMapping("/user_contacts/{idUser}")
-    public ResponseEntity<Set<Contact>> getAllContactsForUser(@PathVariable("idUser")Integer userId){
-       try {
-           Set<Contact> test = contactService.getAllContactsForUser(userId);
-           return new ResponseEntity<Set<Contact>>(test, HttpStatus.OK);
-       } catch (Exception e){
-           e.printStackTrace();
-       }
-       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+
+
+
+    @GetMapping("/users/{idUser}/contacts")
+    public Set<Contact> getAllContactsForUser(@PathVariable("idUser")Integer userId){
+        return contactService.getAllContactsForUser(userId);
+
     }
+
 
     @GetMapping("/contacts/{id}")
     public Contact getContactById(@PathVariable("id") Integer idContact){
@@ -44,15 +44,19 @@ public class ContactController {
 
 
 
-    @PutMapping("/contacts/{idUser}")
-    public void updateContact(@RequestBody Contact contact,@PathVariable("idUser")Integer idUser){
-        contactService.updateContact(contact,idUser);
+    @PutMapping("/user/{idUser}/contacts")
+    public Contact updateContact(@RequestBody Contact contact,@PathVariable("idUser")Integer idUser){
+        return contactService.updateContact(contact,idUser);
     }
 
-    @DeleteMapping("/contacts/{userId}/{contactId}")
-    public void deleteContactById(@PathVariable("userId") Integer userId, @PathVariable("contactId") Integer contactId){
 
-        contactService.removeContact(userId, contactId);
+
+
+
+    @DeleteMapping("/users/{idUser}/{contactId}")
+    public ResponseEntity<?> deleteContactById(@PathVariable("idUser") Integer userId, @PathVariable("contactId") Integer contactId){
+
+        return contactService.removeContact(userId, contactId);
     }
 
 }
