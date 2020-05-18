@@ -44,18 +44,15 @@ public class ContactController {
 
 
 
-    @PutMapping("/user/{idUser}/contacts")
+    @PutMapping("/users/{idUser}/contacts")
     public Contact updateContact(@RequestBody Contact contact,@PathVariable("idUser")Integer idUser){
         return contactService.updateContact(contact,idUser);
     }
 
 
 
-
-
     @DeleteMapping("/users/{idUser}/{contactId}")
     public ResponseEntity<?> deleteContactById(@PathVariable("idUser") Integer userId, @PathVariable("contactId") Integer contactId){
-
         return contactService.removeContact(userId, contactId);
     }
 
