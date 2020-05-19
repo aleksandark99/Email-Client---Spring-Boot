@@ -59,28 +59,8 @@ public class ContactService implements ContactInterface {
 
     }
 
-    /* @DeleteMapping("/posts/{postId}/comments/{commentId}")
-    public ResponseEntity<?> deleteComment(@PathVariable (value = "postId") Long postId, @PathVariable (value = "commentId") Long commentId) {
-        return commentRepository.findByIdAndPostId(commentId, postId).map(comment -> {
-            commentRepository.delete(comment);
-            return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new ResourceNotFoundException("Comment not found with id " + commentId + " and postId " + postId));
-    }*/
-
     @Override
     public ResponseEntity<?> removeContact(Integer userId, Integer contactIdToBeDeleted) {
-
-
-
-/*
-        User u = userRepository.findById(userId).get();
-
-        Contact c = contactRepository.getOne(contactIdToBeDeleted);
-
-        u.remove(c);
-
-        contactRepository.deleteById(c.getId());
-*/
 
         return contactRepository.findByIdAndUser_Id(contactIdToBeDeleted, userId).map(contact -> {
             contactRepository.delete(contact);
@@ -111,10 +91,6 @@ public class ContactService implements ContactInterface {
             contact.setUser(u);
             return contactRepository.save(contact);
         }).orElseThrow(() -> new ResourceNotFoundException("ContactId " + contactToBeUpdated.getId() + "not found"));
-/*        User u = userRepository.findById(idUser).get();
-
-        contactToBeUpdated.setUser(u);
-        contactRepository.save(contactToBeUpdated);*/
 
     }
 }
