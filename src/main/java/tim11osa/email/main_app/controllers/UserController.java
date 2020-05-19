@@ -16,9 +16,6 @@ import tim11osa.email.main_app.security.LoggedUserDetailsService;
 import tim11osa.email.main_app.services.UserService;
 import tim11osa.email.main_app.utility.JwtUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -43,7 +40,7 @@ public class UserController {
 
 
     @PutMapping("/users")
-    public User updateUser(@RequestBody User user) {
+    public AuthenticationResponse updateUser(@RequestBody User user) {
         return userService.updateUser(user);
     }
 
@@ -70,8 +67,7 @@ public class UserController {
             throw new Exception("Incorrect username or password", e);
         }
 
-        final UserDetails userDetails = loggedUserDetailService
-                .loadUserByUsername(authenticationRequest.getUsername());
+         UserDetails userDetails = loggedUserDetailService.loadUserByUsername(authenticationRequest.getUsername());
 
         final String jwt = jwtTokenUtil.generateToken(userDetails);
 
