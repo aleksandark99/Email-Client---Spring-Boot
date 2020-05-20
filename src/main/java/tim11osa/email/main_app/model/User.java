@@ -33,17 +33,22 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Contact> contacts = new HashSet<Contact>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Account> accounts = new HashSet<Account>();
+
     public User(){
 
     }
 
-    public User(int id, String firstName, String lastName, String username, String password, String roles) {
+    public User(int id, String firstName, String lastName, String username, String password, String roles, Set<Contact> contacts, Set<Account> accounts) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.roles = roles;
+        this.contacts = contacts;
+        this.accounts = accounts;
     }
 
     public void add(Contact contact){
@@ -59,12 +64,8 @@ public class User {
         getContacts().remove(contact);
     }
 
-/*    public User(String firstName, String lastName, String username, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-    }*/
+
+
 
     @Override
     public String toString() {
@@ -131,5 +132,13 @@ public class User {
 
     public void setContacts(Set<Contact> contacts) {
         this.contacts = contacts;
+    }
+
+    public Set<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(Set<Account> accounts) {
+        this.accounts = accounts;
     }
 }
