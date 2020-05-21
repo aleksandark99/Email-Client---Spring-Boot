@@ -18,4 +18,10 @@ public class AccountController {
 
         return accountService.addNewAccount(newAccount, userId);
     }
+
+    @PutMapping("/users/{idUser}/accounts/{idAccount}")
+    public Account updateAccount(@RequestBody Account account, @PathVariable("idUser")Integer userId, @PathVariable("idAccount")Integer idAccount){
+
+        return accountService.updateAccount(account, userId, idAccount);
+    }
 }

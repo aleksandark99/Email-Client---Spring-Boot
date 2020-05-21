@@ -10,6 +10,8 @@ import tim11osa.email.main_app.model.User;
 import tim11osa.email.main_app.repository.AccountRepository;
 import tim11osa.email.main_app.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service
 public class AccountService implements AccountInterface {
 
@@ -39,5 +41,44 @@ public class AccountService implements AccountInterface {
 
 
         return accountRepository.save(newAccount);
+    }
+
+    @Override
+    public Account updateAccount(Account accountToBeUpdated, Integer userId, Integer accountId) {
+
+
+
+        if(!userRepository.existsById(userId)){
+            throw new ResourceNotFoundException("UserId: " + userId + " not found");
+        }
+
+        Optional<Account> acc = accountRepository.findByUsername(accountToBeUpdated.getUsername());
+        if (acc.isPresent()){
+            if (acc.get().getId() != accountToBeUpdated.getId()){
+                return null;
+            }
+        }
+
+        User accountOwner = userRepository.findById(userId).get();
+
+        //accountOwner.add(accountToBeUpdated);
+
+       // userRepository.save(accountOwner);
+
+        return accountRepository.findById(accountToBeUpdated.getId()).map(account -> {
+
+            account.setSmtpAddress(accountToBeUpdated.getSmtpAddress());
+            account.setSmtpPort(accountToBeUpdated.getSmtpPort());
+            account.setInServerType(accountToBeUpdated.getInServerType());
+            account.setInServerAddress(accountToBeUpdated.getInServerAddress());
+            account.setInServerPort(accountToBeUpdated.getInServerPort());
+            account.setAuthentication(accountToBeUpdated.isAuthentication());
+            account.setUsername(accountToBeUpdated.getUsername());
+            account.setPassword(accountToBeUpdated.getPassword());
+            account.setDisplayName(accountToBeUpdated.getDisplayName());
+            account.setUser(accountOwner);
+            return accountRepository.save(account);
+        }).orElseThrow(() -> new ResourceNotFoundException("AccountId " + accountToBeUpdated.getId() + "not found"));
+
     }
 }

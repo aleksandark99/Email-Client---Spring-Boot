@@ -39,7 +39,7 @@ public class UserService implements UserInterface {
     }
 
     @Override
-    public boolean addUser(User newUser) {
+    public boolean  addUser(User newUser) {
         boolean exist = userRepository.findByUsername(newUser.getUsername()).isPresent();
         if (exist) return false;
         return userRepository.save(newUser) instanceof  User ? true : false;
