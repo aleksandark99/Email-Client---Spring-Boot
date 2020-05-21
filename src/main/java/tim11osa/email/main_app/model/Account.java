@@ -151,4 +151,20 @@ public class Account {
     public void setUser(User user) {
         this.user = user;
     }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", smtpAddress='" + smtpAddress + '\'' +
+                ", smtpPort=" + smtpPort +
+                ", inServerType=" + inServerType +
+                ", inServerAddress='" + inServerAddress + '\'' +
+                ", inServerPort=" + inServerPort +
+                ", authentication=" + authentication +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", displayName='" + displayName + '\'' +
+                '}';
+    }
 }
