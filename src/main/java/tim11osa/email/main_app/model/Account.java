@@ -12,31 +12,34 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", unique = true, nullable = false)
+    @Column(name = "account_id", unique = true, nullable = false)
     private int id;
 
-    @Column(name = "smtp_Address", unique = false, nullable = false)
+    @Column(name = "smtp_address", unique = false, nullable = false)
     private String smtpAddress;
 
-    @Column(name = "smtp_Port", unique = false, nullable = false)
+    @Column(name = "smtp_port", unique = false, nullable = false)
     private int smtpPort;
 
-    @Column(name = "inServer_Type", unique = false, nullable = false)
+    @Column(name = "inserver_type", unique = false, nullable = false)
     private int inServerType;
 
-    @Column(name = "inServer_Address", unique = false, nullable = false)
+    @Column(name = "inserver_address", unique = false, nullable = false)
     private String inServerAddress;
 
-    @Column(name = "inServer_Port", unique = false, nullable = false)
+    @Column(name = "inserver_port", unique = false, nullable = false)
     private int inServerPort;
+
+    @Column(name = "authentication", unique = false, nullable = false)
+    private boolean authentication;
 
     @Column(name = "username_col", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password_col", unique = true, nullable = false)
+    @Column(name = "password_col", unique = false, nullable = false)
     private String password;
 
-    @Column(name = "display_Name", unique = false, nullable = false)
+    @Column(name = "display_name", unique = false, nullable = false)
     private String displayName;
 
     @ManyToOne()
@@ -47,13 +50,14 @@ public class Account {
     public Account() {
     }
 
-    public Account(int id, String smtpAddress, int smtpPort, int inServerType, String inServerAddress, int inServerPort, String username, String password, String displayName, User user) {
+    public Account(int id, String smtpAddress, int smtpPort, int inServerType, String inServerAddress, int inServerPort, boolean authentication, String username, String password, String displayName, User user) {
         this.id = id;
         this.smtpAddress = smtpAddress;
         this.smtpPort = smtpPort;
         this.inServerType = inServerType;
         this.inServerAddress = inServerAddress;
         this.inServerPort = inServerPort;
+        this.authentication = authentication;
         this.username = username;
         this.password = password;
         this.displayName = displayName;
@@ -92,7 +96,7 @@ public class Account {
         this.inServerType = inServerType;
     }
 
-    public String getInServerAddress() {
+   public String getInServerAddress() {
         return inServerAddress;
     }
 
@@ -100,12 +104,20 @@ public class Account {
         this.inServerAddress = inServerAddress;
     }
 
-    public int getInServerPort() {
+     public int getInServerPort() {
         return inServerPort;
     }
 
     public void setInServerPort(int inServerPort) {
         this.inServerPort = inServerPort;
+    }
+
+    public boolean isAuthentication() {
+        return authentication;
+    }
+
+    public void setAuthentication(boolean authentication) {
+        this.authentication = authentication;
     }
 
     public String getUsername() {

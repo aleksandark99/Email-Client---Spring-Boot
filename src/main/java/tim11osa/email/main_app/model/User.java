@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_tab")
 public class User {
 
     @Id
@@ -63,6 +63,22 @@ public class User {
         contact.setUser(null);
         getContacts().remove(contact);
     }
+
+
+    public void add(Account account){
+        if (account.getUser() != null){
+            account.getUser().getContacts().remove(account);
+        }
+        getAccounts().add(account);
+        account.setUser(this);
+    }
+
+    public void remove(Account account){
+        account.setUser(null);
+        getAccounts().remove(account);
+    }
+
+
 
 
 
