@@ -97,10 +97,6 @@ public class User {
     }
 
 
-
-
-
-
     @Override
     public String toString() {
         return "User{" +
@@ -109,6 +105,10 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", roles='" + roles + '\'' +
+                ", contacts=" + contacts +
+                ", accounts=" + accounts +
+                ", tags=" + tags +
                 '}';
     }
 
