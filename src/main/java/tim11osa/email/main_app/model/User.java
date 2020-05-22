@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_tab")
 public class User {
 
     @Id
@@ -24,7 +24,7 @@ public class User {
     @Column(name = "user_name", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "pass_word", unique = true, nullable = false)
+    @Column(name = "pass_word", unique = false, nullable = false)
     private String password;
 
     @Column(name = "roles", unique = false, nullable = false)
@@ -33,17 +33,22 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Contact> contacts = new HashSet<Contact>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Account> accounts = new HashSet<Account>();
+
     public User(){
 
     }
 
-    public User(int id, String firstName, String lastName, String username, String password, String roles) {
+    public User(int id, String firstName, String lastName, String username, String password, String roles, Set<Contact> contacts, Set<Account> accounts) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.password = password;
         this.roles = roles;
+        this.contacts = contacts;
+        this.accounts = accounts;
     }
 
     public void add(Contact contact){
@@ -59,12 +64,24 @@ public class User {
         getContacts().remove(contact);
     }
 
-/*    public User(String firstName, String lastName, String username, String password) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-    }*/
+
+    public void add(Account account){
+        if (account.getUser() != null){
+            account.getUser().getContacts().remove(account);
+        }
+        getAccounts().add(account);
+        account.setUser(this);
+    }
+
+    public void remove(Account account){
+        account.setUser(null);
+        getAccounts().remove(account);
+    }
+
+
+
+
+
 
     @Override
     public String toString() {
@@ -131,5 +148,13 @@ public class User {
 
     public void setContacts(Set<Contact> contacts) {
         this.contacts = contacts;
+    }
+
+    public Set<Account> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(Set<Account> accounts) {
+        this.accounts = accounts;
     }
 }

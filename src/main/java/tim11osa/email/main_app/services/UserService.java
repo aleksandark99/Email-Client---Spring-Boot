@@ -1,11 +1,17 @@
 package tim11osa.email.main_app.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.UserInterface;
 import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
+import tim11osa.email.main_app.model.AuthenticationResponse;
 import tim11osa.email.main_app.model.User;
 import tim11osa.email.main_app.repository.UserRepository;
+import tim11osa.email.main_app.security.LoggedUserDetails;
+import tim11osa.email.main_app.utility.JwtUtil;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -15,6 +21,12 @@ public class UserService implements UserInterface {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtUtil jwtTokenUtil;
 
     @Override
     public ArrayList<User> getAllUsers() {
@@ -27,8 +39,8 @@ public class UserService implements UserInterface {
     }
 
     @Override
-    public boolean addUser(User newUser) {
-        boolean exist = userRepository.findByUsernameOrPassword(newUser.getUsername(), newUser.getPassword()).isPresent();
+    public boolean  addUser(User newUser) {
+        boolean exist = userRepository.findByUsername(newUser.getUsername()).isPresent();
         if (exist) return false;
         return userRepository.save(newUser) instanceof  User ? true : false;
     }
@@ -39,19 +51,36 @@ public class UserService implements UserInterface {
     }
 
     @Override
-    public User updateUser(User user) {
+    public AuthenticationResponse updateUser(User user) {
 
         if(!userRepository.existsById(user.getId())){
             throw new ResourceNotFoundException("UserId: " + user.getId() + " not found");
         }
 
-        return userRepository.findById(user.getId()). map(u -> {
-            u.setFirstName(user.getFirstName());
-            u.setLastName(user.getLastName());
-            u.setUsername(user.getUsername());
-            u.setPassword(user.getPassword());
-            return userRepository.save(u);
-        }).orElseThrow(() -> new ResourceNotFoundException("UserId: " + user.getId() + " not found"));
+        Optional<User> u = userRepository.findByUsername(user.getUsername());
+        if (u.isPresent()){
+            if (u.get().getId() != user.getId()){
+                return null;
+            }
+        }
+
+        User newlySavedUser = userRepository.save(user);
+
+
+        LoggedUserDetails ud = new  LoggedUserDetails(newlySavedUser);
+
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                     new UsernamePasswordAuthenticationToken(ud, null, ud.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+
+        final String jwt = jwtTokenUtil.generateToken(ud);
+
+
+        System.out.println("SIZE: " + userRepository.findById(newlySavedUser.getId()).get().getContacts().size());
+        return  new AuthenticationResponse(jwt, newlySavedUser);
+
 
     }
 

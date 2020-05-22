@@ -1,5 +1,6 @@
 package tim11osa.email.main_app.crud_interfaces;
 
+import tim11osa.email.main_app.model.AuthenticationResponse;
 import tim11osa.email.main_app.model.User;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public interface UserInterface {
 
     void removeUser(int idUser);
 
-    User updateUser(User user);
+    AuthenticationResponse updateUser(User user);
 
     boolean exists(User potentiallyNewUser);
 

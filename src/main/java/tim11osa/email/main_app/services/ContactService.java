@@ -59,8 +59,10 @@ public class ContactService implements ContactInterface {
 
     }
 
+
     @Override
     public ResponseEntity<?> removeContact(Integer userId, Integer contactIdToBeDeleted) {
+
 
         return contactRepository.findByIdAndUser_Id(contactIdToBeDeleted, userId).map(contact -> {
             contactRepository.delete(contact);
