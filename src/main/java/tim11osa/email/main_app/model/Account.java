@@ -4,6 +4,8 @@ package tim11osa.email.main_app.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "account")
@@ -47,10 +49,15 @@ public class Account {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
+    //odavde dodajes set poruka
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Message> messages = new HashSet<Message>();
+
     public Account() {
     }
 
-    public Account(int id, String smtpAddress, int smtpPort, int inServerType, String inServerAddress, int inServerPort, boolean authentication, String username, String password, String displayName, User user) {
+    public Account(int id, String smtpAddress, int smtpPort, int inServerType, String inServerAddress, int inServerPort, boolean authentication, String username, String password, String displayName, User user, Set<Message> messages) {
         this.id = id;
         this.smtpAddress = smtpAddress;
         this.smtpPort = smtpPort;
@@ -62,6 +69,7 @@ public class Account {
         this.password = password;
         this.displayName = displayName;
         this.user = user;
+        this.messages = messages;
     }
 
     public int getId() {
@@ -96,7 +104,7 @@ public class Account {
         this.inServerType = inServerType;
     }
 
-   public String getInServerAddress() {
+    public String getInServerAddress() {
         return inServerAddress;
     }
 
@@ -104,7 +112,7 @@ public class Account {
         this.inServerAddress = inServerAddress;
     }
 
-     public int getInServerPort() {
+    public int getInServerPort() {
         return inServerPort;
     }
 
@@ -150,6 +158,14 @@ public class Account {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<Message> messages) {
+        this.messages = messages;
     }
 
     @Override
