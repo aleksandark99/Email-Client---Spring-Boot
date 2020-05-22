@@ -1,6 +1,7 @@
 package tim11osa.email.main_app.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.AccountInterface;
 import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
@@ -37,16 +38,11 @@ public class AccountService implements AccountInterface {
 
         newAccount.setUser(u);
 
-        //Account newA = accountRepository.save(newAccount);
-
-
         return accountRepository.save(newAccount);
     }
 
     @Override
     public Account updateAccount(Account accountToBeUpdated, Integer userId, Integer accountId) {
-
-
 
         if(!userRepository.existsById(userId)){
             throw new ResourceNotFoundException("UserId: " + userId + " not found");
@@ -60,10 +56,6 @@ public class AccountService implements AccountInterface {
         }
 
         User accountOwner = userRepository.findById(userId).get();
-
-        //accountOwner.add(accountToBeUpdated);
-
-       // userRepository.save(accountOwner);
 
         return accountRepository.findById(accountToBeUpdated.getId()).map(account -> {
 
@@ -81,4 +73,15 @@ public class AccountService implements AccountInterface {
         }).orElseThrow(() -> new ResourceNotFoundException("AccountId " + accountToBeUpdated.getId() + "not found"));
 
     }
+
+    @Override
+    public ResponseEntity<?> removeAccount(Integer accountIdToBeDeleted, Integer idAccountOwner) {
+
+         return accountRepository.findByIdAndUser_Id(accountIdToBeDeleted, idAccountOwner).map(account -> {
+            accountRepository.delete(account);
+            return ResponseEntity.ok().build();
+        }).orElseThrow(() -> new ResourceNotFoundException("Account not found with id " + accountIdToBeDeleted + " and account owner id: " + idAccountOwner + "!"));
+    }
+
+
 }

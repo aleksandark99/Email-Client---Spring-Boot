@@ -1,6 +1,7 @@
 package tim11osa.email.main_app.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tim11osa.email.main_app.model.Account;
 import tim11osa.email.main_app.model.Contact;
@@ -24,4 +25,11 @@ public class AccountController {
 
         return accountService.updateAccount(account, userId, idAccount);
     }
+
+    @DeleteMapping("/users/{idUser}/accounts/{idAccount}")
+    public ResponseEntity<?> deleteAccount(@PathVariable("idUser")Integer userId, @PathVariable("idAccount")Integer idAccount){
+
+        return accountService.removeAccount(userId, idAccount);
+    }
+
 }
