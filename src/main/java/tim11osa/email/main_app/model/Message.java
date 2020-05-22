@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+@Table(name = "message")
+@Entity
 public class Message {
 
     @Id
@@ -11,7 +13,7 @@ public class Message {
     @Column(name = "message_id", unique = true, nullable = false)
     private int id;
 
-    @Column(name = "from", unique = false, nullable = false)
+    @Column(name = "from_col", unique = false, nullable = false)
     private String from;
 
     @ManyToOne()
