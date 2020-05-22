@@ -43,7 +43,7 @@ public class User {
 
     }
 
-    public User(int id, String firstName, String lastName, String username, String password, String roles, Set<Contact> contacts, Set<Account> accounts) {
+    public User(int id, String firstName, String lastName, String username, String password, String roles, Set<Contact> contacts, Set<Account> accounts, Set<Tag> tags) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,6 +52,7 @@ public class User {
         this.roles = roles;
         this.contacts = contacts;
         this.accounts = accounts;
+        this.tags = tags;
     }
 
     public void add(Contact contact){
@@ -79,6 +80,20 @@ public class User {
     public void remove(Account account){
         account.setUser(null);
         getAccounts().remove(account);
+    }
+
+    /////
+    public void add(Tag tag){
+        if (tag.getUser() != null){
+            tag.getUser().getTags().remove(tag);
+        }
+        getTags().add(tag);
+        tag.setUser(this);
+    }
+
+    public void remove(Tag tag){
+        tag.setUser(null);
+        getTags().remove(tag);
     }
 
 
@@ -159,5 +174,13 @@ public class User {
 
     public void setAccounts(Set<Account> accounts) {
         this.accounts = accounts;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }

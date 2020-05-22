@@ -23,6 +23,11 @@ public class Tag {
 
     //Ovde dodaj vezu ka porukama
 
+    public Tag(){
+
+    }
+
+
 
     public int getId() {
         return id;
