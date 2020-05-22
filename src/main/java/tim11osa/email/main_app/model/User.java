@@ -36,11 +36,14 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Account> accounts = new HashSet<Account>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Tag> tags = new HashSet<Tag>();
+
     public User(){
 
     }
 
-    public User(int id, String firstName, String lastName, String username, String password, String roles, Set<Contact> contacts, Set<Account> accounts) {
+    public User(int id, String firstName, String lastName, String username, String password, String roles, Set<Contact> contacts, Set<Account> accounts, Set<Tag> tags) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -49,6 +52,7 @@ public class User {
         this.roles = roles;
         this.contacts = contacts;
         this.accounts = accounts;
+        this.tags = tags;
     }
 
     public void add(Contact contact){
@@ -78,9 +82,19 @@ public class User {
         getAccounts().remove(account);
     }
 
+    /////
+    public void add(Tag tag){
+        if (tag.getUser() != null){
+            tag.getUser().getTags().remove(tag);
+        }
+        getTags().add(tag);
+        tag.setUser(this);
+    }
 
-
-
+    public void remove(Tag tag){
+        tag.setUser(null);
+        getTags().remove(tag);
+    }
 
 
     @Override
@@ -91,6 +105,10 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", roles='" + roles + '\'' +
+                ", contacts=" + contacts +
+                ", accounts=" + accounts +
+                ", tags=" + tags +
                 '}';
     }
 
@@ -156,5 +174,13 @@ public class User {
 
     public void setAccounts(Set<Account> accounts) {
         this.accounts = accounts;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
     }
 }
