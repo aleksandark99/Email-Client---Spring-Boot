@@ -21,6 +21,12 @@ public class Message {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false)
     private Account account;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @JoinColumn(name = "folder_id", nullable = false)
+    private Folder folder;
+
+
 
     //odavde dodajes dalje sta ti treba..
 
