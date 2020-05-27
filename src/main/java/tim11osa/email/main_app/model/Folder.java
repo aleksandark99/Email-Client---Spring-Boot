@@ -1,6 +1,7 @@
 package tim11osa.email.main_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.persister.walking.internal.FetchStrategyHelper;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -26,7 +27,7 @@ public class Folder {
     private Set<Rule> destination = new HashSet<>();
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "parent_folder")
     @Column(name = "sub_folders")
     private Set<Folder> childFolders = new HashSet<>();
 
@@ -40,14 +41,20 @@ public class Folder {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false)
     private Account account;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @JoinColumn(name = "parent_folder_id", referencedColumnName = "folder_id", nullable = true)
+    private Folder parent_folder;
+
     public Folder() {}
 
-    public Folder(int id, @NonNull String name, Set<Rule> destination, Set<Folder> childFolders, Account account) {
+    public Folder(int id, @NonNull String name, Set<Rule> destination, Set<Folder> childFolders, Account account, Folder parent_folder) {
         this.id = id;
         this.name = name;
         this.destination = destination;
         this.childFolders = childFolders;
         this.account = account;
+        this.parent_folder = parent_folder;
     }
 
     public int getId() {
@@ -89,5 +96,21 @@ public class Folder {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public Set<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Set<Message> messages) {
+        this.messages = messages;
+    }
+
+    public Folder getParent_folder() {
+        return parent_folder;
+    }
+
+    public void setParent_folder(Folder parent_folder) {
+        this.parent_folder = parent_folder;
     }
 }
