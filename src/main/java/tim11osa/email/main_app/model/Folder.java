@@ -27,7 +27,7 @@ public class Folder {
     private Set<Rule> destination = new HashSet<>();
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "parent_folder")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "parent_folder", orphanRemoval = true)
     @Column(name = "sub_folders")
     private Set<Folder> childFolders = new HashSet<>();
 
@@ -41,7 +41,7 @@ public class Folder {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false)
     private Account account;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonIgnore
     @JoinColumn(name = "parent_folder_id", referencedColumnName = "folder_id", nullable = true)
     private Folder parent_folder;

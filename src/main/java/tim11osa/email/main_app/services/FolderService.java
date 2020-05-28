@@ -1,6 +1,7 @@
 package tim11osa.email.main_app.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.FolderInterface;
 import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
@@ -19,6 +20,12 @@ public class FolderService implements FolderInterface {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Override
+    public Folder getOneByAccount(int folder_id, int account_id) {
+
+        return folderRepository.getOneByIdAndAccount(folder_id, account_id).get();
+    }
 
     @Override
     public Set<Folder> getAllFolders(int account_id) {
@@ -41,7 +48,7 @@ public class FolderService implements FolderInterface {
 
             return folderRepository.save(folder);
 
-        }).orElseThrow(() -> new ResourceNotFoundException("The account " + account_id + "is not found!"));
+        }).orElseThrow(() -> new ResourceNotFoundException("The account " + account_id + " is not found!"));
     }
 
     @Override
@@ -58,5 +65,23 @@ public class FolderService implements FolderInterface {
             return folderRepository.save(folder);
 
         }).orElseThrow(() -> new ResourceNotFoundException("The account " + account_id + " is not found"));
+    }
+
+    @Override
+    public ResponseEntity<?> removeFolder(int folder_id, int account_id) {
+
+        if(!accountRepository.existsById(account_id))
+
+            throw new ResourceNotFoundException("The account " + account_id + " is not found!");
+
+        return folderRepository.getOneByIdAndAccount(folder_id, account_id).map(folder -> {
+
+            folder.setParent_folder(null);
+
+            folderRepository.delete(folder);
+
+            return ResponseEntity.ok().build();
+
+        }).orElseThrow(() -> new ResourceNotFoundException("The account " + account_id + " is not found!"));
     }
 }
