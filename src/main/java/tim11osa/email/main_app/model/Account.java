@@ -49,15 +49,20 @@ public class Account {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
-    //odavde dodajes set poruka
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Set<Folder> folders = new HashSet<Folder>();
+
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private Set<Message> messages = new HashSet<Message>();
 
+
+
     public Account() {
     }
 
-    public Account(int id, String smtpAddress, int smtpPort, int inServerType, String inServerAddress, int inServerPort, boolean authentication, String username, String password, String displayName, User user, Set<Message> messages) {
+    public Account(int id, String smtpAddress, int smtpPort, int inServerType, String inServerAddress, int inServerPort, boolean authentication, String username, String password, String displayName, User user, Set<Folder> folders, Set<Message> messages) {
         this.id = id;
         this.smtpAddress = smtpAddress;
         this.smtpPort = smtpPort;
@@ -69,6 +74,7 @@ public class Account {
         this.password = password;
         this.displayName = displayName;
         this.user = user;
+        this.folders = folders;
         this.messages = messages;
     }
 
@@ -160,12 +166,21 @@ public class Account {
         this.user = user;
     }
 
+
     public Set<Message> getMessages() {
         return messages;
     }
 
     public void setMessages(Set<Message> messages) {
         this.messages = messages;
+    }
+
+    public Set<Folder> getFolders() {
+        return folders;
+    }
+
+    public void setFolders(Set<Folder> folders) {
+        this.folders = folders;
     }
 
     @Override
@@ -181,6 +196,9 @@ public class Account {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", displayName='" + displayName + '\'' +
+                ", user=" + user +
+                ", folders=" + folders +
+                ", messages=" + messages +
                 '}';
     }
 }
