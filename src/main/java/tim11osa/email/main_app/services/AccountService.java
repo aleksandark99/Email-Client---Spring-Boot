@@ -75,7 +75,7 @@ public class AccountService implements AccountInterface {
     }
 
     @Override
-    public ResponseEntity<?> removeAccount(Integer accountIdToBeDeleted, Integer idAccountOwner) {
+    public ResponseEntity<?> removeAccount(Integer idAccountOwner, Integer accountIdToBeDeleted) {
 
          return accountRepository.findByIdAndUser_Id(accountIdToBeDeleted, idAccountOwner).map(account -> {
             accountRepository.delete(account);
