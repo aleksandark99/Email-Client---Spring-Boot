@@ -1,19 +1,28 @@
 package tim11osa.email.main_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+
 @Entity
 @Table(name = "contact")
+@SQLDelete(sql = "UPDATE contact SET active = false WHERE contact_id = ?")
+@Where(clause = "active = true")
 public class Contact {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @Column(name = "contact_id", unique = true, nullable = false)
     private Integer id;
+
+    @Column(name = "active", unique = false, nullable = false)
+    private boolean active;
+
 
     @Column(name = "firstName", unique = false, nullable = false)
     private String firstName;
@@ -39,7 +48,8 @@ public class Contact {
     private User user;
 
 
-    public Contact(String firstName, String lastName, String displayName, String email, String photoPath, String note) {
+    public Contact(boolean active, String firstName, String lastName, String displayName, String email, String photoPath, String note) {
+        this.active = active;
         this.firstName = firstName;
         this.lastName = lastName;
         this.displayName = displayName;
@@ -73,6 +83,14 @@ public class Contact {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public String getFirstName() {
