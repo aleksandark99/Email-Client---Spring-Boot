@@ -30,7 +30,7 @@ public class Message {
     private Folder folder;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Attachmnet> attachmnets;
+    private List<Attachment> attachments;
 
 
 //    @OneToMany(mappedBy = "message", cascade = CascadeType.DETACH, fetch = FetchType.LAZY) // Da li ovde treba detach proveriti
@@ -106,12 +106,12 @@ public class Message {
         this.folder = folder;
     }
 
-    public List<Attachmnet> getAttachmnets() {
-        return attachmnets;
+    public List<Attachment> getAttachments() {
+        return attachments;
     }
 
-    public void setAttachmnets(List<Attachmnet> attachmnets) {
-        this.attachmnets = attachmnets;
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
     }
 
     public Set<Tag> getTags() {

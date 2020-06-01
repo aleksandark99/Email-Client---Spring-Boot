@@ -8,7 +8,7 @@ import java.util.Base64;
 
 @Table(name = "attachments")
 @Entity
-public class Attachmnet {
+public class Attachment {
 
 
     @Id
@@ -32,9 +32,9 @@ public class Attachmnet {
     @JoinColumn(name = "id_message", referencedColumnName = "message_id", nullable = false)
     private Message message;
 
-    public Attachmnet(){}
+    public Attachment(){}
 
-    public Attachmnet(int id, byte[]  data, String mime_type, String name, Message message) {
+    public Attachment(int id, byte[]  data, String mime_type, String name, Message message) {
         this.id = id;
         this.data = data;
         this.mime_type = mime_type;

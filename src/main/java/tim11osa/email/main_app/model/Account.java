@@ -2,6 +2,8 @@ package tim11osa.email.main_app.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -9,6 +11,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "account")
+@SQLDelete(sql = "UPDATE account SET active = false WHERE account_id = ?")
+@Where(clause = "active = true")
 public class Account {
 
 
@@ -16,6 +20,9 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_id", unique = true, nullable = false)
     private int id;
+
+    @Column(name = "active", unique = false, nullable = false)
+    private boolean active;
 
     @Column(name = "smtp_address", unique = false, nullable = false)
     private String smtpAddress;
@@ -64,8 +71,9 @@ public class Account {
     public Account() {
     }
 
-    public Account(int id, String smtpAddress, int smtpPort, int inServerType, String inServerAddress, int inServerPort, boolean authentication, String username, String password, String displayName, User user, Set<Folder> folders, Set<Message> messages) {
+    public Account(int id, boolean active, String smtpAddress, int smtpPort, int inServerType, String inServerAddress, int inServerPort, boolean authentication, String username, String password, String displayName, User user, Set<Folder> folders, Set<Message> messages) {
         this.id = id;
+        this.active = active;
         this.smtpAddress = smtpAddress;
         this.smtpPort = smtpPort;
         this.inServerType = inServerType;
@@ -86,6 +94,14 @@ public class Account {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public String getSmtpAddress() {
@@ -189,6 +205,7 @@ public class Account {
     public String toString() {
         return "Account{" +
                 "id=" + id +
+                ", active=" + active +
                 ", smtpAddress='" + smtpAddress + '\'' +
                 ", smtpPort=" + smtpPort +
                 ", inServerType=" + inServerType +
