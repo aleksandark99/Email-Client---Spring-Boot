@@ -3,6 +3,7 @@ package tim11osa.email.main_app.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Table
 @Entity(name = "tag")
@@ -21,7 +22,11 @@ public class Tag {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
-    //Ovde dodaj vezu ka porukama
+//    @ManyToOne()
+//    @JsonIgnore
+//    @JoinColumn(name = "id_message", referencedColumnName = "message_id", nullable = true) // proveriti jel ok za nullable
+    @ManyToMany(mappedBy = "tags")
+    private Set<Message> message;
 
     public Tag(){
 

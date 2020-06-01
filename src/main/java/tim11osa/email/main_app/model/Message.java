@@ -3,6 +3,9 @@ package tim11osa.email.main_app.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Table(name = "message")
 @Entity
@@ -23,12 +26,49 @@ public class Message {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
-    @JoinColumn(name = "folder_id", nullable = false)
+    @JoinColumn(name = "folder_id", nullable = true) //promeni posle u false
     private Folder folder;
 
+    @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Attachmnet> attachmnets;
 
 
-    //odavde dodajes dalje sta ti treba..
+//    @OneToMany(mappedBy = "message", cascade = CascadeType.DETACH, fetch = FetchType.LAZY) // Da li ovde treba detach proveriti
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "tagovi_poruke",
+            joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "message_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "tag_id"))
+    private Set<Tag> tags;
+
+    @ElementCollection
+    @CollectionTable(name = "recipient_to", joinColumns = @JoinColumn(name = "message_id"))
+    @Column(name="recipient_to")
+    private List<String>to;
+
+    @ElementCollection
+    @CollectionTable(name = "recipient_cc", joinColumns = @JoinColumn(name = "message_id"))
+    @Column(name = "recipient_cc")   //i to i cc i bccc mogu biti null ali mora se proveriti da bar
+    private List<String>cc;                                        // jedan od njih nije kada se salje mail
+
+    @ElementCollection
+    @CollectionTable(name = "recipient_bcc", joinColumns = @JoinColumn(name = "message_id"))
+    @Column(name = "recipient_bcc", unique = false, nullable = true)
+    private List<String>bcc;
+
+    @Column(name = "date_time", unique = false, nullable = true)  // promeniti posle da se ne zezas sa testiranjem
+    private LocalDateTime date_time;
+
+    @Column(name = "subject", unique = false, nullable = true)
+    private String subject;
+
+    @Column(name = "content", unique = false, nullable = true)
+    private String content;
+
+    @Column(name = "unread", unique = false, nullable = false)
+    private boolean unread;
+
+
+
 
     public Message(){
 
@@ -56,5 +96,85 @@ public class Message {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public Folder getFolder() {
+        return folder;
+    }
+
+    public void setFolder(Folder folder) {
+        this.folder = folder;
+    }
+
+    public List<Attachmnet> getAttachmnets() {
+        return attachmnets;
+    }
+
+    public void setAttachmnets(List<Attachmnet> attachmnets) {
+        this.attachmnets = attachmnets;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public List<String> getTo() {
+        return to;
+    }
+
+    public void setTo(List<String> to) {
+        this.to = to;
+    }
+
+    public List<String> getCc() {
+        return cc;
+    }
+
+    public void setCc(List<String> cc) {
+        this.cc = cc;
+    }
+
+    public List<String> getBcc() {
+        return bcc;
+    }
+
+    public void setBcc(List<String> bcc) {
+        this.bcc = bcc;
+    }
+
+    public LocalDateTime getDate_time() {
+        return date_time;
+    }
+
+    public void setDate_time(LocalDateTime date_time) {
+        this.date_time = date_time;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public boolean isUnread() {
+        return unread;
+    }
+
+    public void setUnread(boolean unread) {
+        this.unread = unread;
     }
 }
