@@ -17,6 +17,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -81,8 +82,9 @@ public class MessageService implements MessageInterface {
 
 
                 //FileSystemResource file = new FileSystemResource("C:\\log.txt");
-                //helper.addAttachment(file.getFilename(), file);
 
+                //helper.addAttachment(file.getFilename(), file);
+                //helper.addAttachment("aaa", new File("C://Users//Miljan//Desktop//download.png"));
                 mailSender.send(mimeMessage);
             } catch (MessagingException e) {
                 e.printStackTrace();
@@ -100,7 +102,8 @@ public class MessageService implements MessageInterface {
         }
 
 
-        
+
+
 
 
 }
