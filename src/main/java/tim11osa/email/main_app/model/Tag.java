@@ -22,9 +22,7 @@ public class Tag {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
 
-//    @ManyToOne()
-//    @JsonIgnore
-//    @JoinColumn(name = "id_message", referencedColumnName = "message_id", nullable = true) // proveriti jel ok za nullable
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags")
     private Set<Message> message;
 
@@ -32,7 +30,12 @@ public class Tag {
 
     }
 
-
+    public Tag(int id, String name, User user, Set<Message> message) {
+        this.id = id;
+        this.name = name;
+        this.user = user;
+        this.message = message;
+    }
 
     public int getId() {
         return id;
@@ -56,5 +59,13 @@ public class Tag {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Message> getMessage() {
+        return message;
+    }
+
+    public void setMessage(Set<Message> message) {
+        this.message = message;
     }
 }

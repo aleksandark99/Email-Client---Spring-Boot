@@ -2,10 +2,12 @@ package tim11osa.email.main_app.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import tim11osa.email.main_app.model.Folder;
 import tim11osa.email.main_app.services.FolderService;
 
+import javax.naming.Context;
 import java.util.Set;
 
 @RestController

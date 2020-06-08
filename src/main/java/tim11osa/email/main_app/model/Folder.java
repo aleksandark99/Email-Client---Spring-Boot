@@ -32,9 +32,10 @@ public class Folder {
     private Set<Folder> childFolders = new HashSet<>();
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "folder")
-    @Column(name = "messages", nullable = true)
-    private Set<Message> messages = new HashSet<>();
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "folder")
+//    @Column(name = "messages", nullable = true)
+    @ManyToMany(mappedBy = "folders")
+    private Set<Message> messages ;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore

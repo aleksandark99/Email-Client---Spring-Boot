@@ -6,4 +6,6 @@ import tim11osa.email.main_app.model.Message;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Integer> {
+
+
 }

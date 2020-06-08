@@ -16,6 +16,9 @@ public class Message {
     @Column(name = "message_id", unique = true, nullable = false)
     private int id;
 
+    @Column(name = "active",nullable = false)
+    private boolean active;
+
     @Column(name = "from_col", unique = false, nullable = false)
     private String from;
 
@@ -24,18 +27,17 @@ public class Message {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false)
     private Account account;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
-    @JoinColumn(name = "folder_id", nullable = true) //promeni posle u false
-    private Folder folder;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "folders_messages",
+            joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "message_id"),
+            inverseJoinColumns = @JoinColumn(name = "folder_id", referencedColumnName = "folder_id"))
+    private Set<Folder> folders;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Attachment> attachments;
 
-
-//    @OneToMany(mappedBy = "message", cascade = CascadeType.DETACH, fetch = FetchType.LAZY) // Da li ovde treba detach proveriti
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "tagovi_poruke",
+    @JoinTable(name = "tags_messages",
             joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "message_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "tag_id"))
     private Set<Tag> tags;
@@ -67,11 +69,25 @@ public class Message {
     @Column(name = "unread", unique = false, nullable = false)
     private boolean unread;
 
-
-
-
     public Message(){
 
+    }
+
+    public Message(int id, boolean active, String from, Account account, Set<Folder> folders, List<Attachment> attachments, Set<Tag> tags, List<String> to, List<String> cc, List<String> bcc, LocalDateTime date_time, String subject, String content, boolean unread) {
+        this.id = id;
+        this.active = active;
+        this.from = from;
+        this.account = account;
+        this.folders = folders;
+        this.attachments = attachments;
+        this.tags = tags;
+        this.to = to;
+        this.cc = cc;
+        this.bcc = bcc;
+        this.date_time = date_time;
+        this.subject = subject;
+        this.content = content;
+        this.unread = unread;
     }
 
     public int getId() {
@@ -98,12 +114,12 @@ public class Message {
         this.account = account;
     }
 
-    public Folder getFolder() {
-        return folder;
+    public Set<Folder> getFolders() {
+        return folders;
     }
 
-    public void setFolder(Folder folder) {
-        this.folder = folder;
+    public void setFolders(Set<Folder>  folders) {
+        this.folders = folders;
     }
 
     public List<Attachment> getAttachments() {
@@ -176,5 +192,13 @@ public class Message {
 
     public void setUnread(boolean unread) {
         this.unread = unread;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
