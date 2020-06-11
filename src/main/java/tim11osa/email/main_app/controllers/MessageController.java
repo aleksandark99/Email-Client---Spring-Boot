@@ -10,6 +10,9 @@ import tim11osa.email.main_app.services.MessageService;
 
 import java.util.Set;
 
+import org.springframework.web.bind.annotation.*;
+
+
 @RestController
 @RequestMapping("/")
 public class MessageController {
@@ -26,4 +29,9 @@ public class MessageController {
 
 
 
+    @PostMapping("/messages/send/{idAccount}")
+    public boolean addNewContact(@RequestBody Message newMessage, @PathVariable("idAccount")Integer idAccount) {
+
+        return messageService.sendNewMessage(newMessage, idAccount);
+    }
 }
