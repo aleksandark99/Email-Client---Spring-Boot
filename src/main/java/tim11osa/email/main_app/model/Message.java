@@ -27,6 +27,7 @@ public class Message {
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false)
     private Account account;
 
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "folders_messages",
             joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "message_id"),
