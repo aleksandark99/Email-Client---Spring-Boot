@@ -30,7 +30,7 @@ public class MessageController {
 
 
     @PostMapping("/messages/send/{idAccount}")
-    public boolean addNewContact(@RequestBody Message newMessage, @PathVariable("idAccount")Integer idAccount) {
+    public boolean sendNewMessage(@RequestBody Message newMessage, @PathVariable("idAccount")Integer idAccount) {
 
         return messageService.sendNewMessage(newMessage, idAccount);
     }
