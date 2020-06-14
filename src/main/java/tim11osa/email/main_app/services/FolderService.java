@@ -42,9 +42,25 @@ public class FolderService implements FolderInterface {
     @Override
     public Folder createFolder(Folder folder, int account_id) {
 
+        System.out.println(folder);
+
         return accountRepository.findById(account_id).map(account -> {
 
             folder.setAccount(account);
+
+            int parent_folder_id = (folder.getParent_folder() != null) ? folder.getParent_folder().getId() : 0;
+
+            System.out.println("PAREEENT FOOOOOOOOOOOOOLDER " + parent_folder_id);
+
+            if(parent_folder_id != 0) {
+
+                Folder parent_folder = folderRepository.findById(parent_folder_id).get();
+                folder.setParent_folder(parent_folder);
+
+            }else{
+
+                folder.setParent_folder(null);
+            }
 
             return folderRepository.save(folder);
 

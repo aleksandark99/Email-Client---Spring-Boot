@@ -1,6 +1,7 @@
 package tim11osa.email.main_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.persister.walking.internal.FetchStrategyHelper;
 import org.springframework.lang.NonNull;
 
@@ -34,7 +35,8 @@ public class Folder {
 
 //    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "folder")
 //    @Column(name = "messages", nullable = true)
-    @ManyToMany(mappedBy = "folders")
+    @ManyToMany(mappedBy = "folders", fetch = FetchType.EAGER)
+    @Column(nullable = false)
     private Set<Message> messages ;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -43,9 +45,10 @@ public class Folder {
     private Account account;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JoinColumn(name = "parent_folder_id", referencedColumnName = "folder_id", nullable = true)
     private Folder parent_folder;
+
 
     public Folder() {}
 
@@ -113,5 +116,18 @@ public class Folder {
 
     public void setParent_folder(Folder parent_folder) {
         this.parent_folder = parent_folder;
+    }
+
+    @Override
+    public String toString() {
+        return "Folder{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", destination=" + destination +
+                ", childFolders=" + childFolders +
+                ", messages=" + messages +
+                ", account=" + account +
+                ", parent_folder=" + parent_folder +
+                '}';
     }
 }
