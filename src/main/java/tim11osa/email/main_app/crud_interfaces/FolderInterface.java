@@ -17,5 +17,7 @@ public interface FolderInterface {
 
     Folder createSubFolder(Folder folder, int account_id, int parent_folder_id);
 
+    Folder updateFolder(Folder folder, int account_id);
+
     ResponseEntity<?> removeFolder (int folder_id, int account_id);
 }

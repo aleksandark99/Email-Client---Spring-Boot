@@ -50,8 +50,6 @@ public class FolderService implements FolderInterface {
 
             int parent_folder_id = (folder.getParent_folder() != null) ? folder.getParent_folder().getId() : 0;
 
-            System.out.println("PAREEENT FOOOOOOOOOOOOOLDER " + parent_folder_id);
-
             if(parent_folder_id != 0) {
 
                 Folder parent_folder = folderRepository.findById(parent_folder_id).get();
@@ -82,6 +80,23 @@ public class FolderService implements FolderInterface {
 
         }).orElseThrow(() -> new ResourceNotFoundException("The account " + account_id + " is not found"));
     }
+
+    @Override
+    public Folder updateFolder(Folder folderToUpdate, int account_id) {
+
+        if(!accountRepository.existsById(account_id))
+
+            throw new ResourceNotFoundException("The account " + account_id + " is not found!");
+
+        return folderRepository.findById(folderToUpdate.getId()).map(folder -> {
+
+            folder.setName(folderToUpdate.getName());
+
+            return folderRepository.save(folder);
+
+        }).orElseThrow(() -> new ResourceNotFoundException("The folder " + folderToUpdate.getId() + "is not found!"));
+    }
+
 
     @Override
     public ResponseEntity<?> removeFolder(int folder_id, int account_id) {

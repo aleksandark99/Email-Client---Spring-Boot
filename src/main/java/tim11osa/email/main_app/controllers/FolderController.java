@@ -48,6 +48,12 @@ public class FolderController {
         return folderService.createSubFolder(folder, acc_id, parent_id);
     }
 
+    @PutMapping("/folder/{account_id}")
+    public Folder updateFolder(@RequestBody Folder folder, @PathVariable("account_id") int acc_id){
+
+        return folderService.updateFolder(folder, acc_id);
+    }
+
     @DeleteMapping("/folder/{folder_id}/{account_id}")
     public ResponseEntity<?> removeFolder(@PathVariable("folder_id") int folder_id, @PathVariable("account_id") int account_id){
 
