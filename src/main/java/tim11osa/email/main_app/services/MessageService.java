@@ -105,7 +105,6 @@ public class MessageService implements MessageInterface {
                 for (Attachment att : newMessage.getAttachments()){
                     helper.addAttachment(att.getName(), new ByteArrayDataSource(att.getData(), createMimeType(att)));
                 }
-
             }
 
             helper.setFrom(newMessage.getFrom());
@@ -116,15 +115,10 @@ public class MessageService implements MessageInterface {
             helper.setSubject(newMessage.getSubject());
             helper.setText(newMessage.getContent());
 
-
             mailSender.send(mimeMessage);
 
-            newMessage.setActive(true); //setovao na frontu, mislim
-            newMessage.setAccount(acc); //moze na frontu
-            newMessage.setUnread(true); //ovo sam setovao na frontu
+            newMessage.setAccount(acc);
             addNewMessage(newMessage);
-            // treba proci kroz sve cc bcc i to i naci njihove accounte i odraditi addNewMessage samo sa tim accom
-
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -135,35 +129,15 @@ public class MessageService implements MessageInterface {
             messageSent = false;
         }
 
-
         return messageSent;
 
-
     }
-
 
 
     private String createMimeType(Attachment att){
-            //att.getMime_type()
-
-            /*  String filename=newMessage.getAttachments().get(0).getName();
-                System.out.println(filename+"DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-
-                String type= URLConnection.guessContentTypeFromName(filename+"."+newMessage.getAttachments().get(0).getMime_type());
-
-                System.out.println(type+"DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-                DataSource dataSource = new ByteArrayDataSource(newMessage.getAttachments().get(0).getData(),type );
-
-*/
-
-
-
 
         return URLConnection.guessContentTypeFromName(att.getName()+"."+att.getMime_type());
     }
-
-
-
 
 
 
