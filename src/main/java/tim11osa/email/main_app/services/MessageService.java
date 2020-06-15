@@ -1,11 +1,13 @@
 package tim11osa.email.main_app.services;
 
+import com.sun.istack.ByteArrayDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.MessageInterface;
 import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.repository.MessageRepository;
 
+import java.net.URLConnection;
 import java.util.Set;
 import com.sun.mail.smtp.SMTPAddressSucceededException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import tim11osa.email.main_app.model.Account;
 import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.repository.AccountRepository;
 
+import javax.activation.DataSource;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -94,6 +97,17 @@ public class MessageService implements MessageInterface {
                 helper.setSubject(newMessage.getSubject());
                 helper.setText(newMessage.getContent());
 
+                String filename=newMessage.getAttachments().get(0).getName();
+                System.out.println(filename+"DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+
+                String type= URLConnection.guessContentTypeFromName(filename+"."+newMessage.getAttachments().get(0).getMime_type());
+
+                System.out.println(type+"DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+                DataSource dataSource = new ByteArrayDataSource(newMessage.getAttachments().get(0).getData(),type );
+
+
+
+                helper.addAttachment("asdsdaasd",dataSource);
 
                 //FileSystemResource file = new FileSystemResource("C:\\log.txt");
 
