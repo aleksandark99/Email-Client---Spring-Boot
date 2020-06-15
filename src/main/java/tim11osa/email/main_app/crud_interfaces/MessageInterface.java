@@ -10,5 +10,6 @@ public interface MessageInterface {
 
     Set<Message> getAllMessages(int account_id);
 
+    Message addNewMessage(Message message);
 
 }

@@ -45,7 +45,15 @@ public class MessageService implements MessageInterface {
     public Set<Message> getAllMessages(int account_id) {
         return messageRepository.getAllmessagesForAccount(account_id);
     }
-        @Autowired
+
+    @Override
+    public Message addNewMessage(Message message) {
+
+
+        return messageRepository.save(message);
+    }
+
+    @Autowired
         AccountRepository accountRepository;
 
         public boolean sendNewMessage(Message newMessage, int idAccount) {
@@ -114,6 +122,14 @@ public class MessageService implements MessageInterface {
                 //helper.addAttachment(file.getFilename(), file);
                 //helper.addAttachment("aaa", new File("C://Users//Miljan//Desktop//download.png"));
                 mailSender.send(mimeMessage);
+
+                newMessage.setActive(true);
+                newMessage.setAccount(acc);
+                newMessage.setUnread(true);
+                addNewMessage(newMessage);
+                // treba proci kroz sve cc bcc i to i naci njihove accounte i odraditi addNewMessage samo sa tim accom
+
+
             } catch (MessagingException e) {
                 e.printStackTrace();
                 messageSent = false;

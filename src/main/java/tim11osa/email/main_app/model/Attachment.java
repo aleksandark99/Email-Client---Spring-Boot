@@ -18,7 +18,7 @@ public class Attachment {
 
 
     @Lob
-    @Column(name = "base_64_data", columnDefinition="BLOB")
+    @Column(name = "base_64_data", columnDefinition="LONGBLOB")
     private byte[]  data;
 
     @Column(name = "mime_type", unique = false, nullable = false)
@@ -29,8 +29,8 @@ public class Attachment {
 
     @ManyToOne()
     @JsonIgnore
-    @JoinColumn(name = "id_message", referencedColumnName = "message_id", nullable = false)
-    private Message message;
+    @JoinColumn(name = "id_message", referencedColumnName = "message_id", nullable = true)
+    private  Message message;
 
     public Attachment(){}
 

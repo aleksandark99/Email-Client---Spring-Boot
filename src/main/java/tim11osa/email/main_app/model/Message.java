@@ -1,6 +1,7 @@
 package tim11osa.email.main_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -23,7 +24,7 @@ public class Message {
     private String from;
 
     @ManyToOne()
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JoinColumn(name = "account_id", referencedColumnName = "account_id", nullable = false)
     private Account account;
 
