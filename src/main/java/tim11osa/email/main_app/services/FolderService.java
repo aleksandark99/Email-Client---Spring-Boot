@@ -9,6 +9,7 @@ import tim11osa.email.main_app.model.Folder;
 import tim11osa.email.main_app.repository.AccountRepository;
 import tim11osa.email.main_app.repository.FolderRepository;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -47,6 +48,7 @@ public class FolderService implements FolderInterface {
         return accountRepository.findById(account_id).map(account -> {
 
             folder.setAccount(account);
+            folder.setActive(true);
 
             int parent_folder_id = (folder.getParent_folder() != null) ? folder.getParent_folder().getId() : 0;
 

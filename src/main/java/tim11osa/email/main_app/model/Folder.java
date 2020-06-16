@@ -2,6 +2,8 @@ package tim11osa.email.main_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.hibernate.persister.walking.internal.FetchStrategyHelper;
 import org.springframework.lang.NonNull;
 
@@ -11,6 +13,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "folders")
+@SQLDelete(sql = "UPDATE folders SET active = false WHERE folder_id = ?")
+@Where(clause = "active=true")
 public class Folder {
 
     @Id
@@ -18,8 +22,11 @@ public class Folder {
     @Column(name = "folder_id", unique = true, nullable = false)
     private int id;
 
+    @Column(name = "active", nullable = false)
+    private boolean isActive;
+
     @NonNull
-    @Column(name = "name", length = 100, unique = true, nullable = false)
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
 
 
@@ -37,7 +44,7 @@ public class Folder {
 //    @Column(name = "messages", nullable = true)
     @ManyToMany(mappedBy = "folders", fetch = FetchType.EAGER)
     @Column(nullable = false)
-    private Set<Message> messages ;
+    private Set<Message> messages = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JsonIgnore
@@ -52,8 +59,9 @@ public class Folder {
 
     public Folder() {}
 
-    public Folder(int id, @NonNull String name, Set<Rule> destination, Set<Folder> childFolders, Account account, Folder parent_folder) {
+    public Folder(int id, boolean isActive, @NonNull String name, Set<Rule> destination, Set<Folder> childFolders, Account account, Folder parent_folder) {
         this.id = id;
+        this.isActive = isActive;
         this.name = name;
         this.destination = destination;
         this.childFolders = childFolders;
@@ -67,6 +75,14 @@ public class Folder {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     @NonNull
