@@ -1,6 +1,7 @@
 package tim11osa.email.main_app.services;
 
 import com.sun.istack.ByteArrayDataSource;
+import com.sun.mail.util.MailSSLSocketFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.MessageInterface;
@@ -9,32 +10,17 @@ import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.repository.MessageRepository;
 
 import java.net.URLConnection;
-import java.util.Set;
-import com.sun.mail.smtp.SMTPAddressSucceededException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailParseException;
-import org.springframework.mail.SimpleMailMessage;
+import java.security.GeneralSecurityException;
+import java.util.*;
+
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
-import tim11osa.email.main_app.crud_interfaces.MessageInterface;
 import tim11osa.email.main_app.model.Account;
-import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.repository.AccountRepository;
 
-import javax.activation.DataSource;
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import java.io.*;
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 @Service
 public class MessageService implements MessageInterface {
@@ -58,7 +44,7 @@ public class MessageService implements MessageInterface {
 
 
 
-    public boolean sendNewMessage(Message newMessage, int idAccount) {
+    public boolean sendNewMessage(Message newMessage, int idAccount)   {
 
         boolean messageSent = true;
 
@@ -78,10 +64,14 @@ public class MessageService implements MessageInterface {
         mailSender.setUsername(acc.getUsername());
         mailSender.setPassword(acc.getPassword());
 
-        props.put("mail.transport.protocol", "smtp");
+        messageSent = setPropertiesBasedOnSMTPPort(props, acc, messageSent);
+
+        if (!messageSent) return false;
+
+        /*props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.debug", "true");
-        props.put("mail.smtp.ssl.trust", acc.getSmtpAddress());
+        props.put("mail.smtp.ssl.trust", acc.getSmtpAddress());*/
 
         if (isAuthenticationRequired) {
             props.put("mail.smtp.auth", "true");
@@ -103,6 +93,7 @@ public class MessageService implements MessageInterface {
             if (hasAttachments){
 
                 for (Attachment att : newMessage.getAttachments()){
+                    //+String.valueOf(new Random().nextInt(10) + 100)
                     helper.addAttachment(att.getName(), new ByteArrayDataSource(att.getData(), createMimeType(att)));
                 }
             }
@@ -117,8 +108,11 @@ public class MessageService implements MessageInterface {
 
             mailSender.send(mimeMessage);
 
+            newMessage.setDate_time(LocalDateTime.now());
             newMessage.setAccount(acc);
             addNewMessage(newMessage);
+
+
 
         } catch (MessagingException e) {
             e.printStackTrace();
@@ -139,6 +133,44 @@ public class MessageService implements MessageInterface {
         return URLConnection.guessContentTypeFromName(att.getName()+"."+att.getMime_type());
     }
 
+    private boolean setPropertiesBasedOnSMTPPort(Properties props, Account acc, boolean messageSent)  {
+        boolean messageSentChanged = messageSent;
+        switch (String.valueOf(acc.getSmtpPort())){
+            case "587":
+                props.put("mail.transport.protocol", "smtp");
+                props.put("mail.smtp.starttls.enable", "true");
+                props.put("mail.debug", "true");
+                props.put("mail.smtp.ssl.trust", acc.getSmtpAddress());
+                break;
+            case "465":
+                MailSSLSocketFactory sf = null;
+                try {
+                    sf =  new MailSSLSocketFactory();
+                    sf.setTrustAllHosts(true);
+                } catch (GeneralSecurityException e){
+                    e.printStackTrace();
+                    messageSentChanged = !messageSent;
+                } catch (Exception e){
+                    e.printStackTrace();
+                    messageSentChanged = !messageSent;
+                }
+
+                props.put("mail.transport.protocol", "smtp");
+                props.put("mail.smtp.ssl.enable", "true");
+                //props.put("mail.smtp.starttls.enable", "true");
+                //props.put("mail.smtp.host", "smtp.gmail.com");
+               // props.put("mail.smtp.port", "465");
+                //props.put("mail.smtp.auth", "true");
+                //props.put("mail.smtp.socketFactory.port", "465");
+                props.put("mail.smtp.ssl.socketFactory", sf);
+                props.put("mail.debug", "true");
+                break;
+            default: return messageSentChanged;
+
+
+        }
+        return messageSentChanged;
+    }
 
 
 }

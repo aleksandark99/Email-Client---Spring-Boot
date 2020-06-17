@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.services.MessageService;
 
+import java.security.GeneralSecurityException;
 import java.util.Set;
 
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class MessageController {
 
 
     @PostMapping("/messages/send/{idAccount}")
-    public boolean sendNewMessage(@RequestBody Message newMessage, @PathVariable("idAccount")Integer idAccount) {
+    public boolean sendNewMessage(@RequestBody Message newMessage, @PathVariable("idAccount")Integer idAccount)  {
 
         return messageService.sendNewMessage(newMessage, idAccount);
     }
