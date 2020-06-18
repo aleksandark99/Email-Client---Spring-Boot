@@ -9,7 +9,8 @@ import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.repository.MessageRepository;
 
 import java.net.URLConnection;
-import java.util.Set;
+import java.util.*;
+
 import com.sun.mail.smtp.SMTPAddressSucceededException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailParseException;
@@ -31,9 +32,6 @@ import javax.mail.internet.MimeMultipart;
 import java.io.*;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Properties;
 import java.util.stream.Collectors;
 
 @Service
@@ -103,7 +101,10 @@ public class MessageService implements MessageInterface {
             if (hasAttachments){
 
                 for (Attachment att : newMessage.getAttachments()){
-                    helper.addAttachment(att.getName(), new ByteArrayDataSource(att.getData(), createMimeType(att)));
+                    String decoded = new String(Base64.getDecoder().decode(att.getData().getBytes()));
+
+                    helper.addAttachment(att.getName(), new ByteArrayDataSource(decoded.getBytes(), createMimeType(att)));
+                    att.setMessage(newMessage);
                 }
             }
 
@@ -118,6 +119,7 @@ public class MessageService implements MessageInterface {
             mailSender.send(mimeMessage);
 
             newMessage.setAccount(acc);
+
             addNewMessage(newMessage);
 
         } catch (MessagingException e) {

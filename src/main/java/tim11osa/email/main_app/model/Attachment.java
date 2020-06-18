@@ -1,8 +1,10 @@
 package tim11osa.email.main_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import java.lang.reflect.Type;
 import java.sql.Blob;
 import java.util.Base64;
 
@@ -19,7 +21,7 @@ public class Attachment {
 
     @Lob
     @Column(name = "base_64_data", columnDefinition="LONGBLOB")
-    private byte[]  data;
+    private String  data;
 
     @Column(name = "mime_type", unique = false, nullable = false)
     private String mime_type;
@@ -34,7 +36,7 @@ public class Attachment {
 
     public Attachment(){}
 
-    public Attachment(int id, byte[]  data, String mime_type, String name, Message message) {
+    public Attachment(int id, String data, String mime_type, String name, Message message) {
         this.id = id;
         this.data = data;
         this.mime_type = mime_type;
@@ -52,11 +54,11 @@ public class Attachment {
         this.id = id;
     }
 
-    public byte[]  getData() {
+    public String  getData() {
         return data;
     }
 
-    public void setData(byte[]  data) {
+    public void setData(String data) {
         this.data = data;
     }
 
