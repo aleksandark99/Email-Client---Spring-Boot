@@ -10,6 +10,12 @@ import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.repository.MessageRepository;
 
 import java.net.URLConnection;
+import java.util.*;
+
+import com.sun.mail.smtp.SMTPAddressSucceededException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailParseException;
+import org.springframework.mail.SimpleMailMessage;
 import java.security.GeneralSecurityException;
 import java.util.*;
 
@@ -21,6 +27,8 @@ import tim11osa.email.main_app.repository.AccountRepository;
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
+
 
 @Service
 public class MessageService implements MessageInterface {
@@ -93,8 +101,12 @@ public class MessageService implements MessageInterface {
             if (hasAttachments){
 
                 for (Attachment att : newMessage.getAttachments()){
+                    String decoded = new String(Base64.getDecoder().decode(att.getData().getBytes()));
+
+                    helper.addAttachment(att.getName(), new ByteArrayDataSource(decoded.getBytes(), createMimeType(att)));
+                    att.setMessage(newMessage);
                     //+String.valueOf(new Random().nextInt(10) + 100)
-                    helper.addAttachment(att.getName(), new ByteArrayDataSource(att.getData(), createMimeType(att)));
+//                    helper.addAttachment(att.getName(), new ByteArrayDataSource(att.getData(), createMimeType(att)));
                 }
             }
 
@@ -110,6 +122,7 @@ public class MessageService implements MessageInterface {
 
             newMessage.setDate_time(LocalDateTime.now());
             newMessage.setAccount(acc);
+
             addNewMessage(newMessage);
 
 
