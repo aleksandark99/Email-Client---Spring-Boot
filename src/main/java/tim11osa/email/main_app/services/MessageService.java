@@ -136,6 +136,8 @@ public class MessageService implements MessageInterface {
     private boolean setPropertiesBasedOnSMTPPort(Properties props, Account acc, boolean messageSent)  {
         boolean messageSentChanged = messageSent;
         switch (String.valueOf(acc.getSmtpPort())){
+
+            case "25":
             case "587":
                 props.put("mail.transport.protocol", "smtp");
                 props.put("mail.smtp.starttls.enable", "true");
