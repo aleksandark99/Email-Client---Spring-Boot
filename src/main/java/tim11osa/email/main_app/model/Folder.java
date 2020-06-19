@@ -30,7 +30,7 @@ public class Folder {
     private String name;
 
 
-    @OneToMany(cascade= CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "folder", orphanRemoval = true)
     @Column(name = "destination_id", nullable = false)
     private Set<Rule> destination = new HashSet<>();
 
