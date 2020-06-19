@@ -1,16 +1,26 @@
 package tim11osa.email.main_app.services;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.sun.istack.ByteArrayDataSource;
 import com.sun.mail.util.MailSSLSocketFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.MessageInterface;
 import tim11osa.email.main_app.model.Attachment;
 import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.repository.MessageRepository;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.net.URLConnection;
 import java.util.*;
+import java.util.Base64;
+
 
 import com.sun.mail.smtp.SMTPAddressSucceededException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,9 +111,22 @@ public class MessageService implements MessageInterface {
             if (hasAttachments){
 
                 for (Attachment att : newMessage.getAttachments()){
-                    String decoded = new String(Base64.getDecoder().decode(att.getData().getBytes()));
 
-                    helper.addAttachment(att.getName(), new ByteArrayDataSource(decoded.getBytes(), createMimeType(att)));
+              //      String decoded = new String(Base64.getDecoder().decode(att.getData().getBytes()),"UTF-8");
+            //        String d=new String(Base64.getDecoder().decode(att.getData().getBytes()));
+
+                    byte[] bb=Base64.getDecoder().decode(att.getData().getBytes());
+       
+
+                   helper.addAttachment(att.getName(), new ByteArrayDataSource(bb, createMimeType(att)));
+//                   System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//                   System.out.println(att.getData());
+//                    FileSystemResource file = new FileSystemResource(new File("C:/Users/Sasa/Desktop/download.jpg"));
+//                    helper.addAttachment("CoolImage.jpg", file);
+
+
+
+
                     att.setMessage(newMessage);
                     //+String.valueOf(new Random().nextInt(10) + 100)
 //                    helper.addAttachment(att.getName(), new ByteArrayDataSource(att.getData(), createMimeType(att)));
@@ -144,6 +167,7 @@ public class MessageService implements MessageInterface {
     private String createMimeType(Attachment att){
 
         return URLConnection.guessContentTypeFromName(att.getName()+"."+att.getMime_type());
+
     }
 
     private boolean setPropertiesBasedOnSMTPPort(Properties props, Account acc, boolean messageSent)  {
