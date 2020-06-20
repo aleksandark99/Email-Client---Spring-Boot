@@ -5,11 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.FolderInterface;
 import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
+import tim11osa.email.main_app.model.Account;
 import tim11osa.email.main_app.model.Folder;
 import tim11osa.email.main_app.repository.AccountRepository;
 import tim11osa.email.main_app.repository.FolderRepository;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 
@@ -26,6 +28,36 @@ public class FolderService implements FolderInterface {
     public Folder getOneByAccount(int folder_id, int account_id) {
 
         return folderRepository.getOneByIdAndAccount(folder_id, account_id).get();
+    }
+
+    @Override
+    public Folder getInboxByAccount(int account_id) {
+
+        return folderRepository.getInboxByAccount(account_id).get();
+    }
+
+    @Override
+    public Folder getSentByAccount(int account_id) {
+
+        return folderRepository.getSentByAccount(account_id).get();
+    }
+
+    @Override
+    public Folder getDraftsByAccount(int account_id) {
+
+        return folderRepository.getDraftsByAccount(account_id).get();
+    }
+
+    @Override
+    public Folder getFavoritesByAccount(int account_id) {
+
+        return folderRepository.getFavoritesByAccount(account_id).get();
+    }
+
+    @Override
+    public Folder getTrashByAccount(int account_id) {
+
+        return folderRepository.getTrashByAccount(account_id).get();
     }
 
     @Override
@@ -81,6 +113,28 @@ public class FolderService implements FolderInterface {
             return folderRepository.save(folder);
 
         }).orElseThrow(() -> new ResourceNotFoundException("The account " + account_id + " is not found"));
+    }
+
+    @Override
+    public ResponseEntity<?> createInitialFolders(Account account){
+
+        List<Folder> initialFolders = new ArrayList<>();
+
+        Folder inbox = new Folder(true, "Inbox", account);
+        Folder sent = new Folder(true, "Sent", account);
+        Folder drafts = new Folder(true, "Drafts", account);
+        Folder trash = new Folder(true, "Trash", account);
+        Folder favorites = new Folder(true, "Favorites", account);
+
+        initialFolders.add(inbox);
+        initialFolders.add(sent);
+        initialFolders.add(drafts);
+        initialFolders.add(trash);
+        initialFolders.add(favorites);
+
+        folderRepository.saveAll(initialFolders);
+
+        return ResponseEntity.ok().build();
     }
 
     @Override

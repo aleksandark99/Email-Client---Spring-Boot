@@ -22,6 +22,9 @@ public class AccountService implements AccountInterface {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    FolderService folderService;
+
     @Override
     public Account addNewAccount(Account newAccount, Integer userId) {
 
@@ -38,7 +41,11 @@ public class AccountService implements AccountInterface {
 
         newAccount.setUser(u);
 
-        return  accountRepository.save(newAccount);
+        Account account = accountRepository.save(newAccount);
+
+        folderService.createInitialFolders(account);
+
+        return  account;
     }
 
     @Override

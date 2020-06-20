@@ -69,6 +69,13 @@ public class Folder {
         this.parent_folder = parent_folder;
     }
 
+    public Folder (boolean isActive, @NonNull String name, Account account){
+
+        this.isActive = isActive;
+        this.name = name;
+        this.account = account;
+    }
+
     public int getId() {
         return id;
     }
