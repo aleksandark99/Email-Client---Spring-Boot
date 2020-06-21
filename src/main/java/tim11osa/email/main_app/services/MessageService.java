@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.MessageInterface;
 import tim11osa.email.main_app.model.Attachment;
 import tim11osa.email.main_app.model.Message;
+import tim11osa.email.main_app.repository.AttachmentRepository;
 import tim11osa.email.main_app.repository.MessageRepository;
 
 import java.io.ByteArrayOutputStream;
@@ -49,8 +50,16 @@ public class MessageService implements MessageInterface {
     @Autowired
     AccountRepository accountRepository;
 
+
+    @Autowired
+    AttachmentRepository attachmentRepository;
+
     @Override
     public Set<Message> getAllMessages(int account_id) {
+
+        Account acc=accountRepository.findById(account_id).orElse(null);
+
+        fetchAndSaveAllMessages(acc);
         return messageRepository.getAllmessagesForAccount(account_id);
     }
 
@@ -116,7 +125,7 @@ public class MessageService implements MessageInterface {
             //        String d=new String(Base64.getDecoder().decode(att.getData().getBytes()));
 
                     byte[] bb=Base64.getDecoder().decode(att.getData().getBytes());
-       
+
 
                    helper.addAttachment(att.getName(), new ByteArrayDataSource(bb, createMimeType(att)));
 //                   System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
@@ -169,6 +178,25 @@ public class MessageService implements MessageInterface {
         return URLConnection.guessContentTypeFromName(att.getName()+"."+att.getMime_type());
 
     }
+
+
+    public void fetchAndSaveAllMessages(Account account){
+        saveAllNewMessages(MessagePuller.getMailForAccount(account));
+
+    }
+
+    public void saveAllNewMessages(List<Message> messages){
+        messageRepository.saveAll(messages);
+        for (Message m:messages
+             ) {
+           if(m.getAttachments()!=null){
+               attachmentRepository.saveAll(m.getAttachments());
+           }
+
+        }
+    }
+
+
 
     private boolean setPropertiesBasedOnSMTPPort(Properties props, Account acc, boolean messageSent)  {
         boolean messageSentChanged = messageSent;

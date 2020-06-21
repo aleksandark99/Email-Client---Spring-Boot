@@ -7,6 +7,7 @@ import tim11osa.email.main_app.crud_interfaces.AccountInterface;
 import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
 import tim11osa.email.main_app.model.Account;
 import tim11osa.email.main_app.model.Contact;
+import tim11osa.email.main_app.model.Folder;
 import tim11osa.email.main_app.model.User;
 import tim11osa.email.main_app.repository.AccountRepository;
 import tim11osa.email.main_app.repository.UserRepository;
@@ -37,6 +38,8 @@ public class AccountService implements AccountInterface {
         u = userRepository.findById(userId).get();
 
         newAccount.setUser(u);
+
+
 
         return  accountRepository.save(newAccount);
     }

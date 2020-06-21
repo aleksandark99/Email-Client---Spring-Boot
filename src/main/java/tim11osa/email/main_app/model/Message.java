@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +44,7 @@ public class Message {
     @JoinTable(name = "tags_messages",
             joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "message_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "tag_id"))
-    private Set<Tag> tags;
+    private Set<Tag> tags=new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "recipient_to", joinColumns = @JoinColumn(name = "message_id"))
@@ -72,6 +74,12 @@ public class Message {
     private boolean unread;
 
     public Message(){
+
+    }
+    public Message(Account account){
+        this.account=account;
+        this.cc=new ArrayList<String>();
+        this.to=new ArrayList<String>();
 
     }
 
