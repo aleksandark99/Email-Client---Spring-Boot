@@ -31,11 +31,12 @@ public class Message {
     private Account account;
 
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "folders_messages",
-            joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "message_id"),
-            inverseJoinColumns = @JoinColumn(name = "folder_id", referencedColumnName = "folder_id"))
-    private Set<Folder> folders;
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JoinTable(name = "folders_messages",
+//            joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "message_id"),
+//            inverseJoinColumns = @JoinColumn(name = "folder_id", referencedColumnName = "folder_id"))
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Folder folder;
 
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Attachment> attachments;
@@ -83,12 +84,12 @@ public class Message {
 
     }
 
-    public Message(int id, boolean active, String from, Account account, Set<Folder> folders, List<Attachment> attachments, Set<Tag> tags, List<String> to, List<String> cc, List<String> bcc, LocalDateTime date_time, String subject, String content, boolean unread) {
+    public Message(int id, boolean active, String from, Account account, Folder folder, List<Attachment> attachments, Set<Tag> tags, List<String> to, List<String> cc, List<String> bcc, LocalDateTime date_time, String subject, String content, boolean unread) {
         this.id = id;
         this.active = active;
         this.from = from;
         this.account = account;
-        this.folders = folders;
+        this.folder = folder;
         this.attachments = attachments;
         this.tags = tags;
         this.to = to;
@@ -124,12 +125,12 @@ public class Message {
         this.account = account;
     }
 
-    public Set<Folder> getFolders() {
-        return folders;
+    public Folder getFolderr() {
+        return folder;
     }
 
-    public void setFolders(Set<Folder>  folders) {
-        this.folders = folders;
+    public void setFolder(Folder  folder) {
+        this.folder = folder;
     }
 
     public List<Attachment> getAttachments() {

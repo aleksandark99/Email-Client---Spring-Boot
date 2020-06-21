@@ -10,7 +10,7 @@ import java.util.Set;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Integer> {
 
-    @Query(value = "Select * from message  where account_id = ?1", nativeQuery = true)
-    Set<Message> getAllmessagesForAccount(int idAccount);
+    @Query(value = "Select * from message  where account_id = ?1 and folder_folder_id=?2", nativeQuery = true)
+    Set<Message> getAllmessagesForAccount(int idAccount,int idFolderInbox);
 
 }

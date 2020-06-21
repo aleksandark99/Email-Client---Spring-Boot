@@ -54,13 +54,20 @@ public class MessageService implements MessageInterface {
     @Autowired
     AttachmentRepository attachmentRepository;
 
+    @Autowired
+    MessagePuller messagePuller;
+
+    @Autowired
+    FolderService folderService;
+
     @Override
     public Set<Message> getAllMessages(int account_id) {
 
         Account acc=accountRepository.findById(account_id).orElse(null);
 
         fetchAndSaveAllMessages(acc);
-        return messageRepository.getAllmessagesForAccount(account_id);
+        int folderInbox=folderService.getInboxByAccount(account_id).getId();
+        return messageRepository.getAllmessagesForAccount(account_id,folderInbox);
     }
 
     @Override
@@ -154,7 +161,7 @@ public class MessageService implements MessageInterface {
 
             newMessage.setDate_time(LocalDateTime.now());
             newMessage.setAccount(acc);
-
+            newMessage.setFolder(folderService.getSentByAccount(acc.getId()));
             addNewMessage(newMessage);
 
 
@@ -181,7 +188,7 @@ public class MessageService implements MessageInterface {
 
 
     public void fetchAndSaveAllMessages(Account account){
-        saveAllNewMessages(MessagePuller.getMailForAccount(account));
+        saveAllNewMessages(messagePuller.getMailForAccount(account));
 
     }
 

@@ -40,9 +40,9 @@ public class Folder {
     private Set<Folder> childFolders = new HashSet<>();
 
 
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "folder")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "folder")
 //    @Column(name = "messages", nullable = true)
-    @ManyToMany(mappedBy = "folders", fetch = FetchType.EAGER)
+//    @ManyToMany(mappedBy = "folders", fetch = FetchType.EAGER)
     @Column(nullable = false)
     private Set<Message> messages = new HashSet<>();
 

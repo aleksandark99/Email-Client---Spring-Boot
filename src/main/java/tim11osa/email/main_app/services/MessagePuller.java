@@ -1,4 +1,6 @@
 package tim11osa.email.main_app.services;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.model.Account;
 import tim11osa.email.main_app.model.Attachment;
 
@@ -12,11 +14,17 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.search.FlagTerm;
+
+@Service
 public class MessagePuller {
+    @Autowired
+    FolderService folderService;
 
 
-    public static List<tim11osa.email.main_app.model.Message> getMailForAccount(Account account)
+    public  List<tim11osa.email.main_app.model.Message> getMailForAccount(Account account)
     {
+
+
         List<tim11osa.email.main_app.model.Message> messages =new ArrayList<tim11osa.email.main_app.model.Message>();
         String hostval=account.getInServerAddress();
         String mailStrProt=Integer.toString(account.getInServerPort());
@@ -195,6 +203,8 @@ public class MessagePuller {
                 m.setAccount(account);
                 m.setActive(true);
                 m.setAttachments(atts);
+                m.setUnread(true);
+                m.setFolder(folderService.getInboxByAccount(account.getId()));
                 for (Attachment attachment:atts
                      ) {
                     attachment.setMessage(m);
@@ -241,7 +251,7 @@ public class MessagePuller {
 
     }
 
-    public static String getTextFromMimeMultipart(
+    public  String getTextFromMimeMultipart(
             MimeMultipart mimeMultipart)  throws MessagingException, IOException{
         String result = "";
         int count = mimeMultipart.getCount();
