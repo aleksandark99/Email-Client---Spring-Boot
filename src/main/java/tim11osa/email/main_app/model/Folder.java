@@ -30,7 +30,7 @@ public class Folder {
     private String name;
 
 
-    @OneToMany(cascade= CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "folder", orphanRemoval = true)
     @Column(name = "destination_id", nullable = false)
     private Set<Rule> destination = new HashSet<>();
 
@@ -67,6 +67,13 @@ public class Folder {
         this.childFolders = childFolders;
         this.account = account;
         this.parent_folder = parent_folder;
+    }
+
+    public Folder (boolean isActive, @NonNull String name, Account account){
+
+        this.isActive = isActive;
+        this.name = name;
+        this.account = account;
     }
 
     public int getId() {
