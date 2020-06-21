@@ -164,6 +164,7 @@ public class MessageService implements MessageInterface {
             newMessage.setFolder(folderService.getSentByAccount(acc.getId()));
             addNewMessage(newMessage);
 
+            System.out.println("System out test");
 
 
         } catch (MessagingException e) {
