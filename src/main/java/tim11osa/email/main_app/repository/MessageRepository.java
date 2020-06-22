@@ -13,4 +13,55 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     @Query(value = "Select * from message  where active=true and account_id = ?1 and folder_folder_id=?2", nativeQuery = true)
     Set<Message> getAllmessagesForAccount(int idAccount,int idFolderInbox);
 
+    @Query(value = "Select * from message m where m.active = false and m.account_id = ?1", nativeQuery = true)
+    Set<Message> getAllInactiveMessages(int account_id);
+
+
+    @Query(value = "Select * from message m where m.active = true and m.message_id in " +
+            "(select m.message_id from message m JOIN recipient_to rto ON rto.message_id = m.message_id " +
+            "JOIN rules r on r.folder_id = ?2 and  m.folder_folder_id = ?1 where (rto.recipient_to like concat('%', r.value_,'%') and r.operation_ = 0) " +
+            "and r.condition_ = 0 and m.account_id = ?3 and m.message_id not in " +
+            "(select m.message_id from message m JOIN recipient_to rto ON rto.message_id = m.message_id " +
+            "JOIN rules r on r.folder_id = ?2 and m.folder_folder_id = ?1 where (rto.recipient_to like concat('%', r.value_,'%') and r.operation_ = 2) " +
+            "and r.condition_ = 0 and m.account_id = ?3))", nativeQuery = true)
+    Set<Message> getAllMessageByTO(int inbox_id, int folder_id, int account_id);
+
+
+
+    @Query(value = "Select * from message m where m.active = true and m.message_id in " +
+            "(select m.message_id from message m JOIN recipient_cc rcc ON rcc.message_id = m.message_id " +
+            "JOIN rules r on r.folder_id = ?2 and m.folder_folder_id = ?1 where (rcc.recipient_cc like concat('%', r.value_,'%') and r.operation_ = 0) " +
+            "and r.condition_ = 1 and m.account_id = ?3 and m.message_id not in " +
+            "(select m.message_id from message m JOIN recipient_cc rcc ON rcc.message_id = m.message_id " +
+            "JOIN rules r on r.folder_id = ?2 and m.folder_folder_id = ?1 where (rcc.recipient_cc like concat('%', r.value_,'%') and r.operation_ = 2) " +
+            "and r.condition_ = 1 and m.account_id = ?3))", nativeQuery = true)
+    Set<Message> getAllMessageByCC(int inbox_id, int folder_id, int account_id);
+
+
+    @Query(value = "Select * from message m where m.message_id in " +
+            "(Select m.message_id from message m JOIN rules r ON r.folder_id = ?2 and m.folder_folder_id = ?1 where " +
+            "r.value_ like concat('%', m.from_col, '%') and r.operation_ = 0 " +
+            "and r.condition_ = 2 and m.account_id = ?3 and m.message_id not in " +
+            "(select m.message_id from message m JOIN rules r ON r.folder_id = ?2 and m.folder_folder_id = ?1 where " +
+            "r.value_ like concat('%', m.from_col, '%') and r.operation_ = 2 " +
+            "and r.condition_ = 2 and m.account_id = ?3))", nativeQuery = true)
+    Set<Message> getAllMessageByFROM(int inbox_id, int folder_id, int account_id);
+
+
+
+    @Query(value = "select * from message m where m.message_id in " +
+            "(Select m.message_id from message m JOIN rules r ON r.folder_id = ?2 and m.folder_folder_id = ?1 where " +
+            "r.value_ like concat('%', m.subject, '%') and r.operation_ = 0 " +
+            "and r.condition_ = 3 and m.account_id = ?3 and m.message_id not in " +
+            "(select m.message_id from message m JOIN rules r ON r.folder_id = ?2 and m.folder_folder_id = ?1 where " +
+            "r.value_ like concat('%', m.subject, '%') and r.operation_ = 2 " +
+            "and r.condition_ = 3 and m.account_id = ?3))", nativeQuery = true)
+    Set<Message> getAllMessageBySUBJECT(int inbox_id, int folder_id, int account_id);
+
+
+
+
+
+
+
 }

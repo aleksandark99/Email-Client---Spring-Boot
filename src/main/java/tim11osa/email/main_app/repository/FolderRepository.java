@@ -30,7 +30,8 @@ public interface FolderRepository extends JpaRepository<Folder, Integer> {
     @Query(value = "Select * from folders f where f.name like '%Favorites%' and f.account_id = ?1", nativeQuery = true)
     Optional<Folder> getFavoritesByAccount(int account_id);
 
-    @Query(value = "Select * from folders f where f.account_id = ?1 and f.parent_folder_id is null and f.active = true", nativeQuery = true)
+    @Query(value = "Select * from folders f where f.account_id = ?1 and f.parent_folder_id is null and f.active = true and" +
+            " f.name not like '%Inbox%'", nativeQuery = true)
     Set<Folder> getAllFoldersByAccount(int account_id);
 
 

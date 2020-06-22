@@ -12,6 +12,7 @@ import tim11osa.email.main_app.crud_interfaces.MessageInterface;
 import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
 import tim11osa.email.main_app.model.Attachment;
 import tim11osa.email.main_app.model.Message;
+import tim11osa.email.main_app.model.Rule;
 import tim11osa.email.main_app.repository.AttachmentRepository;
 import tim11osa.email.main_app.repository.MessageRepository;
 
@@ -35,6 +36,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import tim11osa.email.main_app.model.Account;
 import tim11osa.email.main_app.repository.AccountRepository;
+import tim11osa.email.main_app.repository.RuleRepository;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
@@ -61,6 +63,7 @@ public class MessageService implements MessageInterface {
     @Autowired
     FolderService folderService;
 
+
     @Override
     public Set<Message> getAllMessages(int account_id) {
 
@@ -70,6 +73,39 @@ public class MessageService implements MessageInterface {
         int folderInbox=folderService.getInboxByAccount(account_id).getId();
         return messageRepository.getAllmessagesForAccount(account_id,folderInbox);
     }
+
+    @Override
+    public Set<Message> getAllMessagesByRules(int folder_id, int account_id) {
+
+        Set<Message> folderMessagesForAllRules = new HashSet<>();
+        int folderInbox = folderService.getInboxByAccount(account_id).getId();
+
+        Set<Message> folderMessagesTO = messageRepository.getAllMessageByTO(folderInbox, folder_id, account_id);
+        Set<Message> folderMessagesCC = messageRepository.getAllMessageByCC(folderInbox, folder_id, account_id);
+        Set<Message> folderMessagesFROM = messageRepository.getAllMessageByFROM(folderInbox, folder_id, account_id);
+        Set<Message> folderMessagesSUBJECT = messageRepository.getAllMessageBySUBJECT(folderInbox, folder_id, account_id);
+
+        Set<Message> folderMessagesManuallySet = messageRepository.getAllmessagesForAccount(account_id, folder_id);
+
+        folderMessagesForAllRules.addAll(folderMessagesTO);
+        folderMessagesForAllRules.addAll(folderMessagesCC);
+        folderMessagesForAllRules.addAll(folderMessagesFROM);
+        folderMessagesForAllRules.addAll(folderMessagesSUBJECT);
+        folderMessagesForAllRules.addAll(folderMessagesManuallySet);
+
+        return folderMessagesForAllRules;
+    }
+
+    @Override
+    public Set<Message> getAllInactiveMessages(int account_id) {
+
+        if(!accountRepository.existsById(account_id))
+
+            throw new ResourceNotFoundException("The account " + account_id + " is not found!");
+
+        return messageRepository.getAllInactiveMessages(account_id);
+    }
+
 
     @Override
     public Message addNewMessage(Message message) {

@@ -33,6 +33,17 @@ public class MessageController {
 
     }
 
+    @GetMapping("/messages/{folder_id}/{account_id}")
+    public Set<Message> getAllMessagesByRules(@PathVariable("folder_id") int folder_id, @PathVariable("account_id") int acc_id){
+
+        return messageService.getAllMessagesByRules(folder_id, acc_id);
+    }
+
+    @GetMapping("/inactive_messages/{account_id}")
+    public Set<Message> getAllInactiveMessages(@PathVariable("account_id") int acc_id){
+
+        return messageService.getAllInactiveMessages(acc_id);
+    }
 
     @PutMapping("/messages/")
     public boolean readMessage(@RequestBody Message message){
