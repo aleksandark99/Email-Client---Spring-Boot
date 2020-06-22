@@ -27,12 +27,24 @@ public class MessageController {
 
     }
 
+    @GetMapping("/messagesfromback/{account_id}")
+    public Set<Message> getAllMessagesFromBack(@PathVariable("account_id") int account_id){
+        return messageService.getAllMessagesFromBack(account_id);
+
+    }
 
 
+    @PutMapping("/messages/")
+    public boolean readMessage(@RequestBody Message message){
+         messageService.makeMessageRead(message);
+         return true;
+    }
 
     @PostMapping("/messages/send/{idAccount}")
     public boolean sendNewMessage(@RequestBody Message newMessage, @PathVariable("idAccount")Integer idAccount)  {
 
         return messageService.sendNewMessage(newMessage, idAccount);
     }
+
+
 }

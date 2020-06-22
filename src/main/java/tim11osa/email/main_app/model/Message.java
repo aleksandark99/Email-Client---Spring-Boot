@@ -35,6 +35,7 @@ public class Message {
 //    @JoinTable(name = "folders_messages",
 //            joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "message_id"),
 //            inverseJoinColumns = @JoinColumn(name = "folder_id", referencedColumnName = "folder_id"))
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Folder folder;
 

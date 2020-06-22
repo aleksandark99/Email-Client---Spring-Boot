@@ -9,6 +9,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.MessageInterface;
+import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
 import tim11osa.email.main_app.model.Attachment;
 import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.repository.AttachmentRepository;
@@ -76,6 +77,19 @@ public class MessageService implements MessageInterface {
         return messageRepository.save(message);
     }
 
+    @Override
+    public Message makeMessageRead(Message message) {
+        return messageRepository.findById(message.getId()).map(m -> {
+            m.setUnread(false);
+            return  messageRepository.save(m);
+        }).orElseThrow(() -> new ResourceNotFoundException("The folder " + message.getId() + "is not found!"));
+    }
+
+    @Override
+    public Set<Message> getAllMessagesFromBack(int account_id) {
+        int folderInbox=folderService.getInboxByAccount(account_id).getId();
+        return messageRepository.getAllmessagesForAccount(account_id,folderInbox);
+    }
 
 
     public boolean sendNewMessage(Message newMessage, int idAccount)   {
@@ -114,6 +128,8 @@ public class MessageService implements MessageInterface {
         }
 
         mailSender.setJavaMailProperties(props);
+
+
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         boolean hasAttachments = false;

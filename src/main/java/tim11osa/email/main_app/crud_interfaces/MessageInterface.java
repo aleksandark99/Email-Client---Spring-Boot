@@ -12,4 +12,9 @@ public interface MessageInterface {
 
     Message addNewMessage(Message message);
 
+    Message makeMessageRead(Message message);
+
+    Set<Message> getAllMessagesFromBack(int account_id);
+
+
 }

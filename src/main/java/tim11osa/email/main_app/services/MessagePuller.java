@@ -6,6 +6,8 @@ import tim11osa.email.main_app.model.Attachment;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import javax.mail.*;
@@ -195,6 +197,9 @@ public class MessagePuller {
 
                 indvidualmsg.setFlag(Flag.SEEN, true);
                 tim11osa.email.main_app.model.Message m=new tim11osa.email.main_app.model.Message(account);
+                Date d=indvidualmsg.getSentDate();
+                LocalDateTime ld=d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+                m.setDate_time(ld);
                 m.setTo(TO);
                 m.setCc(CC);
                 m.setFrom(from);
