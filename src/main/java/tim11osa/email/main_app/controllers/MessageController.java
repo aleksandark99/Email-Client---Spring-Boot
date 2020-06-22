@@ -40,6 +40,12 @@ public class MessageController {
          return true;
     }
 
+    @PutMapping("/messages/delete")
+    public boolean deleteMessage(@RequestBody Message message){
+        messageService.deleteMessageSoft(message);
+        return true;
+    }
+
     @PostMapping("/messages/send/{idAccount}")
     public boolean sendNewMessage(@RequestBody Message newMessage, @PathVariable("idAccount")Integer idAccount)  {
 

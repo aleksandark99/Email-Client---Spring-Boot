@@ -16,5 +16,7 @@ public interface MessageInterface {
 
     Set<Message> getAllMessagesFromBack(int account_id);
 
+    Message deleteMessageSoft(Message message);
+
 
 }

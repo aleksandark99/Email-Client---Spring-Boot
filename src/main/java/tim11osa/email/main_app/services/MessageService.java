@@ -91,6 +91,14 @@ public class MessageService implements MessageInterface {
         return messageRepository.getAllmessagesForAccount(account_id,folderInbox);
     }
 
+    @Override
+    public Message deleteMessageSoft(Message message) {
+        return messageRepository.findById(message.getId()).map(m -> {
+            m.setActive(false);
+            return  messageRepository.save(m);
+        }).orElseThrow(() -> new ResourceNotFoundException("The folder " + message.getId() + "is not found!"));
+    }
+
 
     public boolean sendNewMessage(Message newMessage, int idAccount)   {
 

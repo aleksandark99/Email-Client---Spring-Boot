@@ -41,8 +41,6 @@ public class Folder {
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "folder")
-//    @Column(name = "messages", nullable = true)
-//    @ManyToMany(mappedBy = "folders", fetch = FetchType.EAGER)
     @Column(nullable = false)
     private Set<Message> messages = new HashSet<>();
 
