@@ -53,13 +53,13 @@ public class MessagePuller {
 
             if(t == 1){
                 properties.put("mail.pop3.host", account.getInServerAddress());//acc inserver_adress
-                properties.put("mail.pop3.port", account.getInServerType());
+                properties.put("mail.pop3.port", account.getInServerPort());
                 properties.put("mail.pop3.ssl.enable", "true");
                 properties.put("mail.pop3.ssl.trust", "*");
             }
             else {
                 properties.put("mail.imap.host", account.getInServerAddress());//acc inserver_adress
-                properties.put("mail.imap.port", account.getInServerType());
+                properties.put("mail.imap.port", account.getInServerPort());
                 properties.put("mail.imap.ssl.enable", "true");
                 properties.put("mail.imap.partialfetch", "false");
                 properties.setProperty("mail.imap.partialfetch", "false");
