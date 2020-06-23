@@ -170,42 +170,19 @@ public class MessageService implements MessageInterface {
         } else {
                 //ovo bi trebalo za uns mejl
         }
-
         mailSender.setJavaMailProperties(props);
-
-
-
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         boolean hasAttachments = false;
         if (newMessage.getAttachments().size() > 0) hasAttachments = true;
         MimeMessageHelper helper = null;
-
         try {
-
             helper = new MimeMessageHelper(mimeMessage, hasAttachments);
-
             if (hasAttachments){
-
                 for (Attachment att : newMessage.getAttachments()){
-
-              //      String decoded = new String(Base64.getDecoder().decode(att.getData().getBytes()),"UTF-8");
-            //        String d=new String(Base64.getDecoder().decode(att.getData().getBytes()));
-
                     byte[] bb=Base64.getDecoder().decode(att.getData().getBytes());
-
-
                    helper.addAttachment(att.getName(), new ByteArrayDataSource(bb, createMimeType(att)));
-//                   System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-//                   System.out.println(att.getData());
-//                    FileSystemResource file = new FileSystemResource(new File("C:/Users/Sasa/Desktop/download.jpg"));
-//                    helper.addAttachment("CoolImage.jpg", file);
-
-
-
-
                     att.setMessage(newMessage);
-                    //+String.valueOf(new Random().nextInt(10) + 100)
-//                    helper.addAttachment(att.getName(), new ByteArrayDataSource(att.getData(), createMimeType(att)));
+
                 }
             }
 
