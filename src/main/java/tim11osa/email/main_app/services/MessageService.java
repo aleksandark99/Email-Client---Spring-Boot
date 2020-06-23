@@ -308,4 +308,16 @@ public class MessageService implements MessageInterface {
     }
 
 
+    public int pullFromServerAndGetCount(int idAccount){
+        Optional<Account> acc = accountRepository.findById(idAccount);
+        if(!acc.isPresent()) throw  new ResourceNotFoundException("Account with id " + idAccount + " not found!!");
+
+        List<Message> messages = new MessagePuller().getMailForAccount(acc.get());
+
+        this.saveAllNewMessages(messages);
+
+        return messages.size();
+    }
+
+
 }

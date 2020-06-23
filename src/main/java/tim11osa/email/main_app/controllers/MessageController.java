@@ -63,5 +63,10 @@ public class MessageController {
         return messageService.sendNewMessage(newMessage, idAccount);
     }
 
+    @GetMapping("/messages/notify/{idAccount}")
+    public String numberOfMessages(@PathVariable("idAccount")int idAccount){
+        return String.valueOf(messageService.pullFromServerAndGetCount(idAccount));
+    }
+
 
 }
