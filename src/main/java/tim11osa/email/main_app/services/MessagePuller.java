@@ -61,6 +61,7 @@ public class MessagePuller {
                 properties.put("mail.pop3.host", "imap.gmail.com");//acc inserver_adress
                 properties.put("mail.pop3.port", 1);
                 properties.put("mail.pop3.ssl.enable", "true");
+                properties.put("mail.pop3.ssl.trust", "*");
             }
             else {
                 properties.put("mail.imap.host", "imap.mail.yahoo.com");//acc inserver_adress
@@ -69,6 +70,7 @@ public class MessagePuller {
                 properties.put("mail.imap.partialfetch", "false");
                 properties.setProperty("mail.imap.partialfetch", "false");
                 properties.setProperty("mail.imaps.partialfetch", "false");
+                properties.put("mail.imaps.ssl.trust", "*");
 
 
             }
@@ -196,6 +198,7 @@ public class MessagePuller {
                 }
 
                 indvidualmsg.setFlag(Flag.SEEN, true);
+
                 tim11osa.email.main_app.model.Message m=new tim11osa.email.main_app.model.Message(account);
                 Date d=indvidualmsg.getSentDate();
                 LocalDateTime ld=d.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
