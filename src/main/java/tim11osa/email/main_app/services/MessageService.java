@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamSource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.MessageInterface;
 import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
 import tim11osa.email.main_app.model.Attachment;
 import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.model.Rule;
-import tim11osa.email.main_app.repository.AttachmentRepository;
-import tim11osa.email.main_app.repository.MessageRepository;
+import tim11osa.email.main_app.repository.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -35,8 +35,6 @@ import java.util.*;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import tim11osa.email.main_app.model.Account;
-import tim11osa.email.main_app.repository.AccountRepository;
-import tim11osa.email.main_app.repository.RuleRepository;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
@@ -62,6 +60,9 @@ public class MessageService implements MessageInterface {
 
     @Autowired
     FolderService folderService;
+
+    @Autowired
+    FolderRepository folderRepository;
 
 
     @Override
@@ -106,6 +107,28 @@ public class MessageService implements MessageInterface {
         return messageRepository.getAllInactiveMessages(account_id);
     }
 
+    @Override
+    public Message moveMessageToFolder(int message_id, int folder_id, int account_id) {
+
+        if(!accountRepository.existsById(account_id))
+            throw new ResourceNotFoundException("The account " + account_id + " is not found!");
+
+
+        if(!messageRepository.existsById(message_id)){
+            throw new ResourceNotFoundException("The message " + message_id + " is not found!");
+        }
+
+        return folderRepository.findById(folder_id).map(folder -> {
+
+            Message message = messageRepository.findById(message_id).get();
+
+            message.setFolder(folder);
+
+            return messageRepository.save(message);
+
+        }).orElseThrow(() -> new ResourceNotFoundException("The folder " + folder_id + " is not found!"));
+    }
+
 
     @Override
     public Message addNewMessage(Message message) {
@@ -133,6 +156,18 @@ public class MessageService implements MessageInterface {
             m.setActive(false);
             return  messageRepository.save(m);
         }).orElseThrow(() -> new ResourceNotFoundException("The folder " + message.getId() + "is not found!"));
+    }
+
+    @Override
+    public ResponseEntity<?> deleteMessagePhysically(int message_id) {
+
+        return messageRepository.findById(message_id).map(message -> {
+
+            messageRepository.delete(message);
+
+            return ResponseEntity.ok().build();
+
+        }).orElseThrow(() -> new ResourceNotFoundException("The message " + message_id + " is not found!"));
     }
 
 

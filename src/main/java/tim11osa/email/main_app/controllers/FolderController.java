@@ -36,6 +36,12 @@ public class FolderController {
         return folderService.getSubFolders(account_id, parent_id);
     }
 
+    @GetMapping("/some_folders/{account_id}/{message_id}")
+    public Set<Folder> getFoldersForCheck (@PathVariable("account_id") int account_id, @PathVariable("message_id") int message_id){
+
+        return folderService.getSomeFolders(account_id, message_id);
+    }
+
     @PostMapping("/folder/{account_id}")
     public Folder createFolder(@RequestBody Folder folder, @PathVariable("account_id") int account_id){
 

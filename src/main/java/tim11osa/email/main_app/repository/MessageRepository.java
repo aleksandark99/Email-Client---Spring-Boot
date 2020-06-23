@@ -38,7 +38,7 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     Set<Message> getAllMessageByCC(int inbox_id, int folder_id, int account_id);
 
 
-    @Query(value = "Select * from message m where m.message_id in " +
+    @Query(value = "Select * from message m where m.active = true and m.message_id in " +
             "(Select m.message_id from message m JOIN rules r ON r.folder_id = ?2 and m.folder_folder_id = ?1 where " +
             "r.value_ like concat('%', m.from_col, '%') and r.operation_ = 0 " +
             "and r.condition_ = 2 and m.account_id = ?3 and m.message_id not in " +
@@ -49,7 +49,7 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
 
 
 
-    @Query(value = "select * from message m where m.message_id in " +
+    @Query(value = "select * from message m where m.active = true and m.message_id in " +
             "(Select m.message_id from message m JOIN rules r ON r.folder_id = ?2 and m.folder_folder_id = ?1 where " +
             "r.value_ like concat('%', m.subject, '%') and r.operation_ = 0 " +
             "and r.condition_ = 3 and m.account_id = ?3 and m.message_id not in " +
@@ -57,11 +57,5 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
             "r.value_ like concat('%', m.subject, '%') and r.operation_ = 2 " +
             "and r.condition_ = 3 and m.account_id = ?3))", nativeQuery = true)
     Set<Message> getAllMessageBySUBJECT(int inbox_id, int folder_id, int account_id);
-
-
-
-
-
-
 
 }

@@ -1,6 +1,7 @@
 package tim11osa.email.main_app.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,16 +58,30 @@ public class MessageController {
         return true;
     }
 
+    @DeleteMapping("message/delete/{message_id}")
+    public ResponseEntity<?> deleteMessageFromTrash(@PathVariable("message_id") int message_id){
+
+        return messageService.deleteMessagePhysically(message_id);
+    }
+
     @PostMapping("/messages/send/{idAccount}")
     public boolean sendNewMessage(@RequestBody Message newMessage, @PathVariable("idAccount")Integer idAccount)  {
 
         return messageService.sendNewMessage(newMessage, idAccount);
     }
 
+
     @GetMapping("/messages/notify/{idAccount}")
-    public String numberOfMessages(@PathVariable("idAccount")int idAccount){
+    public String numberOfMessages(@PathVariable("idAccount")int idAccount) {
         return String.valueOf(messageService.pullFromServerAndGetCount(idAccount));
+
     }
 
+    @PutMapping("/message/{message_id}/{folder_id}/{account_id}")
+    public Message moveMessageToFolder(@PathVariable("message_id") int message_id, @PathVariable("folder_id") int folder_id, @PathVariable("account_id") int acc_id){
+
+        return messageService.moveMessageToFolder(message_id, folder_id, acc_id);
+
+    }
 
 }

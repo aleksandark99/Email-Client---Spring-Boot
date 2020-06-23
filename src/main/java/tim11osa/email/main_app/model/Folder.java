@@ -40,7 +40,7 @@ public class Folder {
     private Set<Folder> childFolders = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "folder")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "folder", orphanRemoval = true)
     @Column(nullable = false)
     private Set<Message> messages = new HashSet<>();
 
