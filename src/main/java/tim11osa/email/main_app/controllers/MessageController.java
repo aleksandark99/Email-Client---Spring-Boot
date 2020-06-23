@@ -46,6 +46,12 @@ public class MessageController {
         return messageService.getAllInactiveMessages(acc_id);
     }
 
+    @GetMapping("/sent_messages/{account_id}")
+    public Set<Message> getAllSentMessages(@PathVariable("account_id") int acc_id){
+
+        return messageService.getSentMessagesForAccount(acc_id);
+    }
+
     @PutMapping("/messages/")
     public boolean readMessage(@RequestBody Message message){
          messageService.makeMessageRead(message);
@@ -82,6 +88,12 @@ public class MessageController {
 
         return messageService.moveMessageToFolder(message_id, folder_id, acc_id);
 
+    }
+
+    @PostMapping("/message/{message_id}/{folder_id}/{account_id}/copy")
+    public ResponseEntity<?> copyMessageToFolder(@PathVariable("message_id") int message_id, @PathVariable("folder_id") int folder_id, @PathVariable("account_id") int acc_id){
+
+        return messageService.copyMessageToFolder(message_id, folder_id, acc_id);
     }
 
 }

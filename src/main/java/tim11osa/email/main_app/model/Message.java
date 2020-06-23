@@ -208,4 +208,34 @@ public class Message {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    //DEEP COPY of Message object used for copy message from one folder to another :)
+    public Message(Message original){
+        this.content = original.getContent();
+        this.from = original.getFrom();
+        this.subject = original.getSubject();
+        this.content = original.getContent();
+        this.account = original.getAccount();
+        this.tags = new HashSet<>();
+        for(Tag t : original.getTags()){
+            this.tags.add(new Tag(t));
+        }
+        this.attachments = new ArrayList<>();
+        for(Attachment a : original.getAttachments()){
+            this.attachments.add(new Attachment(a));
+        }
+        this.cc = new ArrayList<>();
+        for(String s : original.getCc()){
+            this.cc.add(s);
+        }
+        this.to = new ArrayList<>();
+        for(String s : original.getTo()){
+            this.to.add(s);
+        }
+        this.bcc = new ArrayList<>();
+        for(String s : original.getBcc()){
+            this.bcc.add(s);
+        }
+
+    }
 }
