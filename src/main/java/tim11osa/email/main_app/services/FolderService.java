@@ -9,6 +9,7 @@ import tim11osa.email.main_app.model.Account;
 import tim11osa.email.main_app.model.Folder;
 import tim11osa.email.main_app.repository.AccountRepository;
 import tim11osa.email.main_app.repository.FolderRepository;
+import tim11osa.email.main_app.repository.MessageRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,9 @@ public class FolderService implements FolderInterface {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    MessageRepository messageRepository;
 
     @Override
     public Folder getOneByAccount(int folder_id, int account_id) {
@@ -70,6 +74,19 @@ public class FolderService implements FolderInterface {
     public Set<Folder> getSubFolders(int account_id, int parent_folder_id) {
 
         return folderRepository.getSubFoldersByParentAndAccount(account_id, parent_folder_id);
+    }
+
+    @Override
+    public Set<Folder> getSomeFolders(int account_id, int message_id) {
+
+        if(!messageRepository.existsById(message_id)){
+
+            throw new ResourceNotFoundException("The message " + message_id + " is not exist!");
+        }
+
+        int folder_id = folderRepository.getFolderForSomeMessage(message_id).getId();
+
+        return folderRepository.getSomeFolders(account_id, folder_id);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package tim11osa.email.main_app.crud_interfaces;
 
+import org.springframework.http.ResponseEntity;
 import tim11osa.email.main_app.model.Message;
 
 import java.util.Set;
@@ -12,6 +13,8 @@ public interface MessageInterface {
 
     Set<Message> getAllInactiveMessages(int account_id);
 
+    Message moveMessageToFolder(int message_id, int folder_id, int account_id);
+
     Message addNewMessage(Message message);
 
     Message makeMessageRead(Message message);
@@ -20,5 +23,5 @@ public interface MessageInterface {
 
     Message deleteMessageSoft(Message message);
 
-
+    ResponseEntity<?> deleteMessagePhysically(int message_id);
 }
