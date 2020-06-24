@@ -195,15 +195,11 @@ public class MessageService implements MessageInterface {
 
         if (!messageSent) return false;
 
-        /*props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.debug", "true");
-        props.put("mail.smtp.ssl.trust", acc.getSmtpAddress());*/
 
         if (isAuthenticationRequired) {
             props.put("mail.smtp.auth", "true");
         } else {
-                //ovo bi trebalo za uns mejl
+
         }
         mailSender.setJavaMailProperties(props);
         MimeMessage mimeMessage = mailSender.createMimeMessage();
@@ -236,7 +232,6 @@ public class MessageService implements MessageInterface {
             newMessage.setFolder(folderService.getSentByAccount(acc.getId()));
             addNewMessage(newMessage);
 
-            System.out.println("System out test");
 
 
         } catch (MessagingException e) {
@@ -304,16 +299,10 @@ public class MessageService implements MessageInterface {
 
                 props.put("mail.transport.protocol", "smtp");
                 props.put("mail.smtp.ssl.enable", "true");
-                //props.put("mail.smtp.starttls.enable", "true");
-                //props.put("mail.smtp.host", "smtp.gmail.com");
-               // props.put("mail.smtp.port", "465");
-                //props.put("mail.smtp.auth", "true");
-                //props.put("mail.smtp.socketFactory.port", "465");
                 props.put("mail.smtp.ssl.socketFactory", sf);
                 props.put("mail.debug", "true");
                 break;
             default: return messageSentChanged;
-
 
         }
         return messageSentChanged;
@@ -324,7 +313,7 @@ public class MessageService implements MessageInterface {
         Optional<Account> acc = accountRepository.findById(idAccount);
         if(!acc.isPresent()) throw  new ResourceNotFoundException("Account with id " + idAccount + " not found!!");
 
-        List<Message> messages = new MessagePuller().getMailForAccount(acc.get());
+        List<Message> messages = messagePuller.getMailForAccount(acc.get());
 
         this.saveAllNewMessages(messages);
 

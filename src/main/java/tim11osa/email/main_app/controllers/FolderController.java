@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import tim11osa.email.main_app.model.Folder;
+import tim11osa.email.main_app.repository.FolderRepository;
 import tim11osa.email.main_app.services.FolderService;
 
 import javax.naming.Context;
@@ -65,4 +66,5 @@ public class FolderController {
 
         return folderService.removeFolder(folder_id, account_id);
     }
+
 }
