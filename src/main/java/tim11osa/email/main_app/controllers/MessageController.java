@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tim11osa.email.main_app.model.Folder;
 import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.services.MessageService;
 
@@ -77,10 +78,9 @@ public class MessageController {
     }
 
 
-    @GetMapping("/messages/notify/{idAccount}")
+    @GetMapping("messages/notify/{idAccount}")
     public String numberOfMessages(@PathVariable("idAccount")int idAccount) {
         return String.valueOf(messageService.pullFromServerAndGetCount(idAccount));
-
     }
 
     @PutMapping("/message/{message_id}/{folder_id}/{account_id}")
@@ -90,10 +90,12 @@ public class MessageController {
 
     }
 
+
     @PostMapping("/message/{message_id}/{folder_id}/{account_id}/copy")
     public ResponseEntity<?> copyMessageToFolder(@PathVariable("message_id") int message_id, @PathVariable("folder_id") int folder_id, @PathVariable("account_id") int acc_id){
 
         return messageService.copyMessageToFolder(message_id, folder_id, acc_id);
     }
+
 
 }
