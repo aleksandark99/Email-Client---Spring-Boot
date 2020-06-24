@@ -16,6 +16,10 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
     @Query(value = "Select * from message m where m.active = false and m.account_id = ?1", nativeQuery = true)
     Set<Message> getAllInactiveMessages(int account_id);
 
+    @Query(value = "Select * from message m where m.account_id = ?1 and " +
+            "m.from_col = (select a.username_col from account a where a.account_id = ?1)", nativeQuery = true)
+    Set<Message> getAllSentMessages(int account_id);
+
 
     @Query(value = "Select * from message m where m.active = true and m.message_id in " +
             "(select m.message_id from message m JOIN recipient_to rto ON rto.message_id = m.message_id " +

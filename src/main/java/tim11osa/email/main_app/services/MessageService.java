@@ -108,6 +108,16 @@ public class MessageService implements MessageInterface {
     }
 
     @Override
+    public Set<Message> getSentMessagesForAccount(int account_id) {
+
+        if(!accountRepository.existsById(account_id))
+
+            throw new ResourceNotFoundException("The account " + account_id + " is not found!");
+
+        return messageRepository.getAllSentMessages(account_id);
+    }
+
+    @Override
     public Message moveMessageToFolder(int message_id, int folder_id, int account_id) {
 
         if(!accountRepository.existsById(account_id))
@@ -125,6 +135,33 @@ public class MessageService implements MessageInterface {
             message.setFolder(folder);
 
             return messageRepository.save(message);
+
+        }).orElseThrow(() -> new ResourceNotFoundException("The folder " + folder_id + " is not found!"));
+    }
+
+    @Override
+    public ResponseEntity<?> copyMessageToFolder(int message_id, int folder_id, int account_id) {
+
+        if(!accountRepository.existsById(account_id))
+            throw new ResourceNotFoundException("The account " + account_id + " is not found!");
+
+
+        if(!messageRepository.existsById(message_id)){
+            throw new ResourceNotFoundException("The message " + message_id + " is not found!");
+        }
+
+        return folderRepository.findById(folder_id).map(folder -> {
+
+            Message message = messageRepository.findById(message_id).get();
+
+            Message copy = new Message(message);
+
+            copy.setActive(true);
+            copy.setFolder(folder);
+
+            messageRepository.save(copy);
+
+            return ResponseEntity.ok().build();
 
         }).orElseThrow(() -> new ResourceNotFoundException("The folder " + folder_id + " is not found!"));
     }

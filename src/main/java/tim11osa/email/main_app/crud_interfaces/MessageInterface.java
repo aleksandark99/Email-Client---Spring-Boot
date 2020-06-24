@@ -13,7 +13,11 @@ public interface MessageInterface {
 
     Set<Message> getAllInactiveMessages(int account_id);
 
+    Set<Message> getSentMessagesForAccount(int account_id);
+
     Message moveMessageToFolder(int message_id, int folder_id, int account_id);
+
+    ResponseEntity<?> copyMessageToFolder(int message_id, int folder_id, int account_id);
 
     Message addNewMessage(Message message);
 

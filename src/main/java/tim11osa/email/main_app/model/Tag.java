@@ -68,4 +68,9 @@ public class Tag {
     public void setMessage(Set<Message> message) {
         this.message = message;
     }
+
+    public Tag(Tag original){
+        this.name = original.getName();
+        this.user = original.getUser();
+    }
 }

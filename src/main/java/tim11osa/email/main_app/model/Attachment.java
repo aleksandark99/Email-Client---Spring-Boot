@@ -85,4 +85,10 @@ public class Attachment {
     public void setMessage(Message message) {
         this.message = message;
     }
+
+    public Attachment(Attachment original){
+        this.name = original.getName();
+        this.data = original.getData();
+        this.mime_type = original.getMime_type();
+    }
 }
