@@ -2,6 +2,7 @@ package tim11osa.email.main_app.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import tim11osa.email.main_app.model.Message;
 
@@ -61,5 +62,10 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
             "r.value_ like concat('%', m.subject, '%') and r.operation_ = 2 " +
             "and r.condition_ = 3 and m.account_id = ?3))", nativeQuery = true)
     Set<Message> getAllMessageBySUBJECT(int inbox_id, int folder_id, int account_id);
+
+    @Query(value = "delete  from message where message_id=?1")
+    ResponseEntity<?> deleteMessageForTrash(int message_id);
+
+
 
 }

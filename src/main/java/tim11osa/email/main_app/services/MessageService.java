@@ -200,7 +200,7 @@ public class MessageService implements MessageInterface {
 
         return messageRepository.findById(message_id).map(message -> {
 
-            messageRepository.delete(message);
+            messageRepository.deleteMessageForTrash(message_id);
 
             return ResponseEntity.ok().build();
 

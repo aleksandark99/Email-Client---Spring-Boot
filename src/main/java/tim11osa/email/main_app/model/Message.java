@@ -2,6 +2,7 @@ package tim11osa.email.main_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 @Table(name = "message")
 @Entity
+@SQLDelete(sql = "UPDATE message SET active = false WHERE message_id = ?")
 public class Message {
 
     @Id
