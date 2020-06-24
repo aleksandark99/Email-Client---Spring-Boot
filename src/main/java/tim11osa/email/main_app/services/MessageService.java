@@ -271,6 +271,7 @@ public class MessageService implements MessageInterface {
             newMessage.setDate_time(LocalDateTime.now());
             newMessage.setAccount(acc);
             newMessage.setFolder(folderService.getSentByAccount(acc.getId()));
+            newMessage.setActive(true);
             addNewMessage(newMessage);
 
             System.out.println("System out test");
