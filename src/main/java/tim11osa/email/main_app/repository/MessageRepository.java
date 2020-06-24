@@ -63,8 +63,15 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
             "and r.condition_ = 3 and m.account_id = ?3))", nativeQuery = true)
     Set<Message> getAllMessageBySUBJECT(int inbox_id, int folder_id, int account_id);
 
-    @Query(value = "delete  from message where message_id=?1")
+    @Query(value = "delete from attachments where id_message = ?1;" +
+            "delete from recipient_bcc where message_id = ?1;" +
+            "delete from recipient_cc where message_id = ?1;" +
+            "delete from recipient_to where message_id = ?1;" +
+            "delete from tags_messages where message_id = ?1;" +
+            "delete  from message where message_id = ?1;",nativeQuery = true)
     ResponseEntity<?> deleteMessageForTrash(int message_id);
+
+
 
 
 
