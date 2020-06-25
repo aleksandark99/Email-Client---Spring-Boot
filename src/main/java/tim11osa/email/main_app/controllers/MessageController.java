@@ -53,6 +53,12 @@ public class MessageController {
         return messageService.getSentMessagesForAccount(acc_id);
     }
 
+    @GetMapping("/drafts_messages/{account_id}")
+    public Set<Message> getDraftsMessages(@PathVariable("account_id") int acc_id){
+
+        return messageService.getDraftMessagesForAccount(acc_id);
+    }
+
     @PutMapping("/messages/")
     public boolean readMessage(@RequestBody Message message){
          messageService.makeMessageRead(message);
