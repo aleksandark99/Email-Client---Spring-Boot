@@ -118,6 +118,19 @@ public class MessageService implements MessageInterface {
     }
 
     @Override
+    public Set<Message> getDraftMessagesForAccount(int account_id) {
+
+        if(!accountRepository.existsById(account_id))
+
+            throw new ResourceNotFoundException("The account " + account_id + " is not found!");
+
+        int draft_id = folderService.getDraftsByAccount(account_id).getId();
+
+        return messageRepository.getAllmessagesForAccount(account_id, draft_id);
+    }
+
+
+    @Override
     public Message moveMessageToFolder(int message_id, int folder_id, int account_id) {
 
         if(!accountRepository.existsById(account_id))
@@ -200,6 +213,11 @@ public class MessageService implements MessageInterface {
 
         return messageRepository.findById(message_id).map(message -> {
 
+            messageRepository.deleteAttachments(message_id);
+            messageRepository.deleteCC(message_id);
+            messageRepository.deleteBCC(message_id);
+            messageRepository.deleteTO(message_id);
+            messageRepository.deleteTags(message_id);
             messageRepository.deleteMessageForTrash(message_id);
 
             return ResponseEntity.ok().build();

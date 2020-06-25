@@ -2,6 +2,8 @@ package tim11osa.email.main_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
@@ -44,6 +46,7 @@ public class Message {
             joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "message_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "tag_id"))
     private Set<Tag> tags=new HashSet<>();
+
 
     @ElementCollection
     @CollectionTable(name = "recipient_to", joinColumns = @JoinColumn(name = "message_id"))
@@ -218,6 +221,7 @@ public class Message {
         this.subject = original.getSubject();
         this.content = original.getContent();
         this.account = original.getAccount();
+        this.date_time = original.getDate_time();
         this.tags = new HashSet<>();
         for(Tag t : original.getTags()){
             this.tags.add(new Tag(t));
