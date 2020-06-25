@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.MessageInterface;
 import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
 import tim11osa.email.main_app.model.Attachment;
+import tim11osa.email.main_app.model.Folder;
 import tim11osa.email.main_app.model.Message;
 import tim11osa.email.main_app.model.Rule;
 import tim11osa.email.main_app.repository.*;
@@ -184,6 +185,20 @@ public class MessageService implements MessageInterface {
     public Message addNewMessage(Message message) {
 
         return messageRepository.save(message);
+    }
+
+    @Override
+    public ResponseEntity<?> moveMessageToDrafts(Message message, int account_id) {
+
+        if(!accountRepository.existsById(account_id))
+            throw new ResourceNotFoundException("The account " + account_id + " is not found!");
+
+        Folder drafts_folder = folderService.getDraftsByAccount(account_id);
+
+        message.setFolder(drafts_folder);
+        messageRepository.save(message);
+
+        return ResponseEntity.ok().build();
     }
 
     @Override
