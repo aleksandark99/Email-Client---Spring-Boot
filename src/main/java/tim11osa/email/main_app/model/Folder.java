@@ -39,6 +39,7 @@ public class Folder {
     @Column(name = "sub_folders")
     private Set<Folder> childFolders = new HashSet<>();
 
+
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "folder", orphanRemoval = true)
     @Column(nullable = false)

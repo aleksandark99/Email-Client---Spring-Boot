@@ -17,6 +17,9 @@ public class Tag {
     @Column(name = "name", unique = false, nullable = false)
     private String name;
 
+    @Column(name = "active")
+    boolean active;
+
     @ManyToOne()
     @JsonIgnore
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
@@ -30,11 +33,12 @@ public class Tag {
 
     }
 
-    public Tag(int id, String name, User user, Set<Message> message) {
+    public Tag(int id, String name, User user, Set<Message> message,boolean active) {
         this.id = id;
         this.name = name;
         this.user = user;
         this.message = message;
+        this.active=active;
     }
 
     public int getId() {
@@ -72,5 +76,13 @@ public class Tag {
     public Tag(Tag original){
         this.name = original.getName();
         this.user = original.getUser();
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

@@ -45,6 +45,7 @@ public class Message {
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "tag_id"))
     private Set<Tag> tags=new HashSet<>();
 
+
     @ElementCollection
     @CollectionTable(name = "recipient_to", joinColumns = @JoinColumn(name = "message_id"))
     @Column(name="recipient_to")

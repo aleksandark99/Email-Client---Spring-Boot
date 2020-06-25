@@ -48,7 +48,8 @@ public class TagService implements TagInterface {
     public ResponseEntity<?> removeTag(int tagId) {
 
        return tagRepository.findById(tagId).map(tag -> {
-            tagRepository.delete(tag);
+            tag.setActive(false);
+            tagRepository.save(tag);
             return ResponseEntity.ok().build();
         }).orElseThrow(() -> new ResourceNotFoundException("Tag not found with id " + tagId));
     }
