@@ -96,6 +96,12 @@ public class MessageController {
 
     }
 
+    @PostMapping("/message/drafts/{account_id}")
+    public ResponseEntity<?> moveMessageToDrafts(@RequestBody Message message, @PathVariable("account_id") int account_id){
+
+        return messageService.moveMessageToDrafts(message, account_id);
+    }
+
 
     @PostMapping("/message/{message_id}/{folder_id}/{account_id}/copy")
     public ResponseEntity<?> copyMessageToFolder(@PathVariable("message_id") int message_id, @PathVariable("folder_id") int folder_id, @PathVariable("account_id") int acc_id){

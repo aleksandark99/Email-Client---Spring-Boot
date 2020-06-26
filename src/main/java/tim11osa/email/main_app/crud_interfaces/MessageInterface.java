@@ -23,6 +23,8 @@ public interface MessageInterface {
 
     Message addNewMessage(Message message);
 
+    ResponseEntity<?> moveMessageToDrafts(Message message, int account_id);
+
     Message makeMessageRead(Message message);
 
     Set<Message> getAllMessagesFromBack(int account_id);
