@@ -11,9 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import tim11osa.email.main_app.crud_interfaces.MessageInterface;
 import tim11osa.email.main_app.exceptions.ResourceNotFoundException;
-import tim11osa.email.main_app.model.Attachment;
+import tim11osa.email.main_app.model.*;
 import tim11osa.email.main_app.model.Message;
-import tim11osa.email.main_app.model.Rule;
 import tim11osa.email.main_app.repository.*;
 
 import java.io.ByteArrayOutputStream;
@@ -34,7 +33,6 @@ import java.util.*;
 
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import tim11osa.email.main_app.model.Account;
 
 import javax.mail.*;
 import javax.mail.internet.MimeMessage;
@@ -286,6 +284,9 @@ public class MessageService implements MessageInterface {
             newMessage.setAccount(acc);
             newMessage.setFolder(folderService.getSentByAccount(acc.getId()));
             newMessage.setActive(true);
+            for(Tag t: newMessage.getTags()){
+                t.setUser(acc.getUser());
+            }
             addNewMessage(newMessage);
 
 

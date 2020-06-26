@@ -41,7 +41,7 @@ public class Message {
     @OneToMany(mappedBy = "message", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Attachment> attachments;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     @JoinTable(name = "tags_messages",
             joinColumns = @JoinColumn(name = "message_id", referencedColumnName = "message_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "tag_id"))

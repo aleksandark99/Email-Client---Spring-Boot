@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import tim11osa.email.main_app.model.AuthenticationRequest;
 import tim11osa.email.main_app.model.AuthenticationResponse;
+import tim11osa.email.main_app.model.Tag;
 import tim11osa.email.main_app.model.User;
 import tim11osa.email.main_app.repository.UserRepository;
 import tim11osa.email.main_app.security.LoggedUserDetailsService;
@@ -73,6 +74,13 @@ public class UserController {
 
         Optional<User> u = userRepository.findByUsername(userDetails.getUsername());
 
+        if(u!=null){
+            for(Tag t : u.get().getTags()){
+                if(t.isActive()==false){
+                    u.get().remove(t);
+                }
+            }
+        }
         //return ResponseEntity.ok(new AuthenticationResponse(jwt, u.get()));
 
         return  new AuthenticationResponse(jwt, u.get());
