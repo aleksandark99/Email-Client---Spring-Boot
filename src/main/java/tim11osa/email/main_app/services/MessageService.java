@@ -3,6 +3,7 @@ package tim11osa.email.main_app.services;
 import ch.qos.logback.core.net.SyslogOutputStream;
 import com.sun.istack.ByteArrayDataSource;
 import com.sun.mail.util.MailSSLSocketFactory;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
@@ -63,6 +64,9 @@ public class MessageService implements MessageInterface {
 
     @Autowired
     FolderRepository folderRepository;
+
+    @Autowired
+    TagRepository tagRepository;
 
 
     @Override
@@ -206,6 +210,39 @@ public class MessageService implements MessageInterface {
             m.setUnread(false);
             return  messageRepository.save(m);
         }).orElseThrow(() -> new ResourceNotFoundException("The folder " + message.getId() + "is not found!"));
+    }
+
+    @Override
+    public Message addTagToMessage(Message message,int tag_id) {
+        return messageRepository.findById(message.getId()).map(m -> {
+            Tag t= tagRepository.getTagById(tag_id);
+            if(t != null){
+                m.getTags().add(t);
+
+            }else{
+                return null;
+            }
+
+
+            return  messageRepository.save(m);
+
+        }).orElseThrow(() -> new ResourceNotFoundException("Error"));
+
+    }
+
+    @Override
+    public Message removeTagForMessagee(Message message,int tag_id) {
+        return messageRepository.findById(message.getId()).map(m -> {
+            Tag t= tagRepository.getTagById(tag_id);
+            if(t != null){
+                m.getTags().remove(t);
+
+            }else{
+                return null;
+            }
+            return  messageRepository.save(m);
+        }).orElseThrow(() -> new ResourceNotFoundException("The folder " + message.getId() + "is not found!"));
+
     }
 
     @Override

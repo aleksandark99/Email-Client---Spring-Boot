@@ -15,6 +15,8 @@ import java.util.Set;
 
 import org.springframework.web.bind.annotation.*;
 
+import javax.sound.midi.Track;
+
 
 @RestController
 @RequestMapping("/")
@@ -61,9 +63,30 @@ public class MessageController {
 
     @PutMapping("/messages/")
     public boolean readMessage(@RequestBody Message message){
-         messageService.makeMessageRead(message);
-         return true;
+        if( messageService.makeMessageRead(message)!=null){
+            return true;
+
+        }
+        return false;
     }
+
+    @PutMapping("/messages/addTag/{tagId}")
+    public boolean addTagToMessage(@RequestBody Message message,@PathVariable("tagId") int tag_id){
+        if(messageService.addTagToMessage(message,tag_id)!=null){
+            return true;
+        }
+
+        return false;
+    }
+    @PutMapping("/messages/removeTag/{tagId}")
+    public boolean removeTag(@RequestBody Message message,@PathVariable("tagId") int tag_id){
+        if(messageService.removeTagForMessagee(message,tag_id)!=null){
+            return true;
+        }
+
+        return false;
+    }
+
 
     @PutMapping("/messages/delete")
     public boolean deleteMessage(@RequestBody Message message){

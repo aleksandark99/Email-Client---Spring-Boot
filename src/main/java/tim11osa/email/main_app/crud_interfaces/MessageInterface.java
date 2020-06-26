@@ -27,6 +27,10 @@ public interface MessageInterface {
 
     Message makeMessageRead(Message message);
 
+    Message addTagToMessage(Message message,int tag_id);
+
+    Message removeTagForMessagee(Message message,int tag_id);
+
     Set<Message> getAllMessagesFromBack(int account_id);
 
     Message deleteMessageSoft(Message message);

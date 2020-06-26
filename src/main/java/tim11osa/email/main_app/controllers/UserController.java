@@ -74,7 +74,7 @@ public class UserController {
 
         Optional<User> u = userRepository.findByUsername(userDetails.getUsername());
 
-        if(u!=null){
+        if(u!=null && u.get().getTags()!=null){
             for(Tag t : u.get().getTags()){
                 if(t.isActive()==false){
                     u.get().remove(t);
