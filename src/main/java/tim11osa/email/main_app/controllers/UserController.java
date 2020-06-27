@@ -74,12 +74,13 @@ public class UserController {
 
         Optional<User> u = userRepository.findByUsername(userDetails.getUsername());
 
-        if(u!=null && u.get().getTags()!=null){
-            for(Tag t : u.get().getTags()){
-                if(t.isActive()==false){
-                    u.get().remove(t);
-                }
-            }
+        if(u!=null && u.get().getTags()!=null && u.get().getTags().size()>0){
+
+//            for(Tag t : u.get().getTags()){
+//                if(t.isActive()==false){
+//                    u.get().removeSoft(t);
+//                }
+//            }
         }
         //return ResponseEntity.ok(new AuthenticationResponse(jwt, u.get()));
 

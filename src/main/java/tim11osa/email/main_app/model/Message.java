@@ -69,6 +69,7 @@ public class Message {
     @Column(name = "subject", unique = false, nullable = true)
     private String subject;
 
+    @Lob
     @Column(name = "content", unique = false, nullable = true)
     private String content;
 

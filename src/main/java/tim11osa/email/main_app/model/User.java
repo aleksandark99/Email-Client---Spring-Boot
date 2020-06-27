@@ -99,6 +99,10 @@ public class User {
         getTags().remove(tag);
     }
 
+    public void removeSoft(Tag tag){
+        getTags().remove(tag);
+    }
+
 
     @Override
     public String toString() {

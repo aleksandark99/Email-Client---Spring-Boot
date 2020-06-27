@@ -23,4 +23,5 @@ public class AuthenticationResponse implements Serializable {
     public void setNewLoggedInUser(User user) {
         this.user = user;
     }
+
 }
