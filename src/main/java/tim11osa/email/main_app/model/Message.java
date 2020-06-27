@@ -26,7 +26,7 @@ public class Message {
     @Column(name = "active",nullable = false)
     private boolean active;
 
-    @Column(name = "from_col", unique = false, nullable = false)
+    @Column(name = "from_col", unique = false, nullable = true)
     private String from;
 
     @ManyToOne()

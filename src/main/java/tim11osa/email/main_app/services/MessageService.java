@@ -199,6 +199,8 @@ public class MessageService implements MessageInterface {
         Folder drafts_folder = folderService.getDraftsByAccount(account_id);
 
         message.setFolder(drafts_folder);
+        message.setActive(true);
+        message.setDate_time(LocalDateTime.now());
         messageRepository.save(message);
 
         return ResponseEntity.ok().build();
