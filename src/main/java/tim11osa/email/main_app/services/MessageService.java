@@ -1,9 +1,11 @@
 package tim11osa.email.main_app.services;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
+//import ch.qos.logback.core.net.SyslogOutputStream;
 import com.sun.istack.ByteArrayDataSource;
 import com.sun.mail.util.MailSSLSocketFactory;
 import net.bytebuddy.implementation.bytecode.Throw;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;

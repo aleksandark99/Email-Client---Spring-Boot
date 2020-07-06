@@ -44,7 +44,6 @@ public class SecurityAdapter extends WebSecurityConfigurerAdapter {
                 .antMatchers("/register").permitAll()
 //                .antMatchers("/{userId}/**").access("@webSecurity.checkUserId(authentication,#userId)")
                 .antMatchers("/{user_id}/**").access("@webSecurity.checkUserId(authentication,#user_id)")
-
                 .anyRequest().authenticated().and()
                 .exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
