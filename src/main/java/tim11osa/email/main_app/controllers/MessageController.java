@@ -31,7 +31,7 @@ public class MessageController {
 
     @GetMapping("/messages/{account_id}")
     public Set<Message> getAllMessages(@PathVariable("user_id") int user_id,@PathVariable("account_id") int account_id){
-        logger.info("TESSSSSSSSSSSSSSSSSS");
+        logger.info("Usao u metodu za dobavljanje novih poruka za usera sa id :" +user_id);
         return messageService.getAllMessages(account_id);
 
     }

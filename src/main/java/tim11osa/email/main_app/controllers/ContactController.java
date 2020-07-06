@@ -12,7 +12,7 @@ import tim11osa.email.main_app.services.ContactService;
 import java.util.*;
 
 @RestController
-@RequestMapping("/{user_id}")
+@RequestMapping("/")
 public class ContactController {
 
 
@@ -37,7 +37,7 @@ public class ContactController {
     }
 
 
-    @GetMapping("/contacts/{id}")
+    @GetMapping("/{idUser}/contacts/{id}")
     public Contact getContactById(@PathVariable("id") Integer idContact){
         return contactService.getContactById(idContact);
     }
