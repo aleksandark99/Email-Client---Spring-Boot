@@ -2,6 +2,7 @@ package tim11osa.email.main_app.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,14 +20,15 @@ import javax.sound.midi.Track;
 
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/{user_id}")
 public class MessageController {
 
     @Autowired
     MessageService messageService;
 
     @GetMapping("/messages/{account_id}")
-    public Set<Message> getAllMessages(@PathVariable("account_id") int account_id){
+    public Set<Message> getAllMessages(@PathVariable("user_id") int user_id,@PathVariable("account_id") int account_id){
+
         return messageService.getAllMessages(account_id);
 
     }

@@ -8,24 +8,32 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import tim11osa.email.main_app.filters.JwtRequestFilter;
+import tim11osa.email.main_app.model.User;
 
 @EnableWebSecurity
 public class SecurityAdapter extends WebSecurityConfigurerAdapter {
 
+//    @Autowired
+//    UserDetailsService userDetailsService;
+
     @Autowired
-    UserDetailsService userDetailsService;
+    LoggedUserDetailsService userDetailsService;
 
     @Autowired
     JwtRequestFilter jwtRequestFilter;
 
+
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+//        auth.userDetailsService(userDetailsService);
+        auth.eraseCredentials(false).userDetailsService(userDetailsService).and().jdbcAuthentication();
     }
 
     @Override
@@ -34,6 +42,9 @@ public class SecurityAdapter extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .authorizeRequests().antMatchers("/login").permitAll()
                 .antMatchers("/register").permitAll()
+//                .antMatchers("/{userId}/**").access("@webSecurity.checkUserId(authentication,#userId)")
+                .antMatchers("/{user_id}/**").access("@webSecurity.checkUserId(authentication,#user_id)")
+
                 .anyRequest().authenticated().and()
                 .exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -59,6 +70,8 @@ public class SecurityAdapter extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+
+
 
 
 }

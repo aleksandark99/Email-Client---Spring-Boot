@@ -11,7 +11,7 @@ import tim11osa.email.main_app.services.TagService;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/user_id")
 public class TagController {
 
     @Autowired
