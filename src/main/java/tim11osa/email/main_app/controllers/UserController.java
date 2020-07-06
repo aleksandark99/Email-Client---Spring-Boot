@@ -2,6 +2,8 @@ package tim11osa.email.main_app.controllers;
 
 
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,6 +24,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/")
 public class UserController {
+    private static final Logger logger = LogManager.getLogger(MessageController.class);
+
 
     @Autowired
     UserService userService;
@@ -58,7 +62,7 @@ public class UserController {
     //@PostMapping("/authenticate")
     //ResponseEntity<?>
     public AuthenticationResponse createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-
+        logger.info("Authentication of user ");
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
@@ -76,13 +80,7 @@ public class UserController {
 
         if(u!=null && u.get().getTags()!=null && u.get().getTags().size()>0){
 
-//            for(Tag t : u.get().getTags()){
-//                if(t.isActive()==false){
-//                    u.get().removeSoft(t);
-//                }
-//            }
         }
-        //return ResponseEntity.ok(new AuthenticationResponse(jwt, u.get()));
 
         return  new AuthenticationResponse(jwt, u.get());
     }
