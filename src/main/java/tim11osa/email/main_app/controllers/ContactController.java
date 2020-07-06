@@ -12,7 +12,7 @@ import tim11osa.email.main_app.services.ContactService;
 import java.util.*;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/{user_id}")
 public class ContactController {
 
 

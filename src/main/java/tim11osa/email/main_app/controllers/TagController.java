@@ -11,7 +11,7 @@ import tim11osa.email.main_app.services.TagService;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/user_id")
+@RequestMapping("/")
 public class TagController {
 
     @Autowired
@@ -26,7 +26,7 @@ public class TagController {
     public Tag createNewTagForUser(@RequestBody Tag tag,@PathVariable("userId")int userId){
         return  tagService.createNewTag(tag,userId);
     }
-    @DeleteMapping("/tags/{tagId}")
+    @DeleteMapping("{user_id}/tags/{tagId}")
     public ResponseEntity<?> deleteTag(@PathVariable("tagId")int tagId ){
         return tagService.removeTag(tagId);
     }

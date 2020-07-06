@@ -10,7 +10,7 @@ import tim11osa.email.main_app.services.RuleService;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/{user_id}")
 public class RuleController {
 
     @Autowired

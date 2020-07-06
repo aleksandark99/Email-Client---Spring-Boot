@@ -12,7 +12,7 @@ import javax.naming.Context;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/{user_id}")
 public class FolderController {
 
     @Autowired
